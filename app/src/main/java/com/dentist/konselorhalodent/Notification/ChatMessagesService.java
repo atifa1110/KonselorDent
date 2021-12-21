@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +23,10 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.jetbrains.annotations.NotNull;
 
 public class ChatMessagesService extends FirebaseMessagingService {
+
+    private static final String CHANNEL_ID = "channel";
+    String img_url = null;
+    Bitmap image_bitmap = null;
 
     @Override
     public void onNewToken(@NonNull @NotNull String s) {
