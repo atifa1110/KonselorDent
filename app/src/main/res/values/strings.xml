@@ -1,0 +1,92 @@
+<resources>
+    <string name="app_name">Konselor Dent</string>
+    <string name="welcome">Welcome, </string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="selamat_datang">Hi, Selamat Datang!</string>
+    <string name="signIn_lanjut">Sign In untuk melanjutkan</string>
+    <string name="lupa_password">Lupa Password?</string>
+    <string name="masuk">Masuk</string>
+    <string name="belum_punya_akun">Belum punya akun?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="masukkan_email">Masukkan email</string>
+    <string name="masukkan_password">Masukkan password</string>
+    <string name="masukkan_email_benar">Masukkan email yang benar</string>
+    <string name="login_success">Login Successful</string>
+    <string name="btn_next">Next</string>
+    <string name="apakah_anda_pernah">Apakah 6 bulan terakhir ini anda pernah ke dokter gigi?</string>
+    <string name="step1">Step 1 of 4</string>
+    <string name="step2">Step 2 of 4</string>
+    <string name="keluhan">Keluhan apa yang biasanya dialami?</string>
+    <string name="step3">"Step 3 of 4 "</string>
+    <string name="pengobatan">Pengobatan apa yang dilakukan ketika mengalami keluhan gigi?</string>
+    <string name="required">Required</string>
+    <string name="isi">Isi</string>
+    <string name="diabetes">Diabetes</string>
+    <string name="jantung">Jantung</string>
+    <string name="hipertensi">Hipertensi</string>
+    <string name="alergi">Alergi</string>
+    <string name="tidak_ada">Tidak ada</string>
+    <string name="silahkan_centang">Silahkan centang data di bawah ini apabila anda memiliki riwayat penyakit di bawah ini</string>
+    <string name="step4">Step 4 of 4</string>
+    <string name="chat">Chat</string>
+    <string name="info">Info</string>
+    <string name="profile">Profile</string>
+    <string name="failed_to_update">Failed to update profile %1$ss</string>
+    <string name="blm_ada_chat">Belum Ada Chat Aktif</string>
+    <string name="konsultasikan_dengan">Konsultasi masalah kesehatan anda\ndengan konselor kami</string>
+    <string name="failed_to_send_message">Failed to send message : %1$s</string>
+    <string name="failed_to_send_notification">Failed to send notification : %1$s</string>
+    <string name="sign_up_failed">Sign Up Failed : %1$s</string>
+
+
+    <string-array name="yesno">
+        <item>Ya</item>
+        <item>Tidak</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ubah_foto_profil">ubah foto profil</string>
+    <string name="nama">Nama</string>
+    <string name="simpan">Simpan</string>
+    <string name="jenis_kelamin">Jenis Kelamin</string>
+    <string name="nim">Nim</string>
+    <string name="angkatan">Angkatan Profesi</string>
+    <string name="nomer_telpon">Nomor Telpon</string>
+    <string name="keluar">Keluar</string>
+    <string name="contoh_nama">Atifa Fiorenza</string>
+    <string name="email_contoh">atifafiorenza24@gmail.com</string>
+    <string name="akun">Akun</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="data_berhasil_disimpan">Data berhasil disimpan</string>
+    <string name="choose_from_library">Choose from gallery</string>
+    <string name="remove_current_photo">Remove</string>
+    <string name="enter_message">Enter message</string>
+    <string name="message_sent_successfully">Message sent successfully</string>
+    <string name="judul_contoh">No Judul</string>
+    <string name="sign_up_to_halo">Sign Up to Halo Dent</string>
+    <string name="masukkan_data">Maukkan Informasi anda di bawah ini</string>
+    <string name="password_confirm">Confirm Password</string>
+    <string name="nomer_ponsel">Nomor Ponsel</string>
+    <string name="daftar">Daftar</string>
+    <string name="sign_in">Sign In</string>
+    <string name="konselor">Konselor</string>
+    <string name="msg_subscribed">messages</string>
+    <string name="msg_failed_subscribed">failed messages</string>
+    <string name="message_name">John Gardy Cole</string>
+    <string name="time">10.00</string>
+    <string name="failed_to_read_data">Failed to read data : %1$s</string>
+    <string name="participant">Pasien</string>
+
+    <string name="interview_1">Apakah 6 bulan terakhir ini anda pernah ke dokter gigi?</string>
+    <string name="interview_2">Keluhan apa yang biasanya dialami?</string>
+    <string name="interview_3">Pengobatan yang dilakukan ketika mengalami keluhan gigi?</string>
+    <string name="interview_4">Silahkan centang data di bawah apabila anda memiliki riwayat penyakit di bawah ini?</string>
+    <string name="add">add</string>
+    <string name="stop">End</string>
+    <string name="cari">search</string>
+    <string name="this_is_message">This is a Message</string>
+</resources>
