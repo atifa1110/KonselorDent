@@ -71,8 +71,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_partisipant_group" />
 
-    <Button
-        android:id="@+id/btn_leave"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_keluar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -80,6 +80,7 @@
         android:background="@drawable/background_btn_blue"
         android:fontFamily="@font/opensans_regular"
         android:text="Keluar"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

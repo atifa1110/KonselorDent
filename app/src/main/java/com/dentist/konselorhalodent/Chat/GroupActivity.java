@@ -50,6 +50,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -175,7 +176,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-
+        session();
     }
 
     @Override
@@ -428,7 +429,42 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         messageQuery.addChildEventListener(childEventListener);
     }
 
-    private void session() {
+    private void session(){
+        databaseReferenceGroups.child(groupId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    String status = snapshot.child(NodeNames.STATUS).getValue().toString();
+
+                    if(status.equals("selesai")){
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GroupActivity.this);
+                        alertDialogBuilder.setMessage("Sesi chat ini sudah berakhir")
+                                .setCancelable(false)
+                                .setPositiveButton("Lanjutkan", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        databaseReferenceGroups.child(groupId).child("status").setValue("");
+                                    }
+                                }).setNegativeButton("Keluar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                onBackPressed();
+                            }
+                        });
+                        AlertDialog alertDialog = alertDialogBuilder.create();
+                        alertDialog.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void sessionStop() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GroupActivity.this);
         alertDialogBuilder.setMessage("Apakah sesi chat ingin diakhiri?")
                 .setCancelable(false)
@@ -436,6 +472,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         databaseReferenceGroups.child(groupId).child("status").setValue("selesai");
+                        etMessage.setEnabled(false);
                     }
                 }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
             @Override
@@ -446,7 +483,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
 
     private void setActionBar(){
         ActionBar actionBar = getSupportActionBar();
@@ -483,7 +519,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(intent);
                 break;
             case R.id.menu_stop:
-                session();
+                sessionStop();
                 break;
         }
         return super.onOptionsItemSelected(item);

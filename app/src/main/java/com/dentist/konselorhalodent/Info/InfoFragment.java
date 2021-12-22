@@ -60,6 +60,7 @@ public class InfoFragment extends Fragment {
 
 
         floatingActionButton = view.findViewById(R.id.floating_button);
+        floatingActionButton.setVisibility(View.GONE);
         progress_bar = view.findViewById(R.id.progress_bar);
         searchText = view.findViewById(R.id.searchView);
         searchText.setHint("Search Information");
@@ -94,12 +95,12 @@ public class InfoFragment extends Fragment {
             }
         });
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UploadFragment.display(getChildFragmentManager());
-            }
-        });
+//        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                UploadFragment.display(getChildFragmentManager());
+//            }
+//        });
 
         readTopikDatabase();
     }

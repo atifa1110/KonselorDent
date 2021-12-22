@@ -85,9 +85,6 @@ public class GroupFragment extends Fragment {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReferenceGroups = FirebaseDatabase.getInstance().getReference().child(NodeNames.GROUPS);
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(item);
-        itemTouchHelper.attachToRecyclerView(rvChat);
-
         //set query dengan diurutkan dengan waktu kirim
         query = databaseReferenceGroups.orderByChild(NodeNames.TIME_STAMP);
         childEventListener = new ChildEventListener() {
@@ -120,35 +117,6 @@ public class GroupFragment extends Fragment {
         //emptyChat.setVisibility(View.VISIBLE);
     }
 
-    ItemTouchHelper.SimpleCallback item = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
-        @Override
-        public boolean onMove(@NonNull @com.google.firebase.database.annotations.NotNull RecyclerView recyclerView, @NonNull @com.google.firebase.database.annotations.NotNull RecyclerView.ViewHolder viewHolder, @NonNull @com.google.firebase.database.annotations.NotNull RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(@NonNull @com.google.firebase.database.annotations.NotNull RecyclerView.ViewHolder viewHolder, int direction) {
-            GroupModel deletedChat = groupList.get(viewHolder.getAdapterPosition());
-            String chatId = deletedChat.getGroupId();
-
-            // below line is to remove item from our array list.
-            groupList.remove(viewHolder.getAdapterPosition());
-
-            // below line is to notify our item is removed from adapter.
-            groupAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
-
-            deleteChat(chatId);
-        }
-    };
-
-    private void deleteChat(String chatId){
-        databaseReferenceGroups.child(currentUser.getUid()).child(chatId).setValue(null).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull @com.google.firebase.database.annotations.NotNull Task<Void> task) {
-
-            }
-        });
-    }
 
     private void loadGroupChat(DataSnapshot snapshot,boolean isNew,String groupId){
         emptyChat.setVisibility(View.GONE);

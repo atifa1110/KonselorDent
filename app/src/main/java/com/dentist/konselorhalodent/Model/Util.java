@@ -55,10 +55,10 @@ public class Util {
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
             DatabaseReference databaseReference = rootRef.child(NodeNames.TOKENS).child(currentUser.getUid());
 
-            HashMap<String,String> hashMap = new HashMap<>();
-            hashMap.put(NodeNames.DEVICE_TOKEN,token);
+//            HashMap<String,String> hashMap = new HashMap<>();
+//            hashMap.put(NodeNames.DEVICE_TOKEN,token);
 
-            databaseReference.setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+            databaseReference.child(NodeNames.DEVICE_TOKEN).setValue(token).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(!task.isSuccessful()){
@@ -68,6 +68,7 @@ public class Util {
             });
         }
     }
+
     public static void updateChatDetails(Context context, String currentUserId, String chatUserId, String lastMessage){
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         //asking the chat user whenever we sent the message unread count will
@@ -83,18 +84,23 @@ public class Util {
                     currentCount = snapshot.child(NodeNames.UNREAD_COUNT).getValue().toString();
                 }
 
-                Map chatMap = new HashMap();
-                chatMap.put(NodeNames.TIME_STAMP, ServerValue.TIMESTAMP);
-                //convert string into integer whenever sending a message it will increment the unread data
-                chatMap.put(NodeNames.UNREAD_COUNT,Integer.valueOf(currentCount)+1);
-                chatMap.put(NodeNames.LAST_MESSAGE,lastMessage);
-                chatMap.put(NodeNames.LAST_MESSAGE_TIME,ServerValue.TIMESTAMP);
+                Map chatUser = new HashMap();
+                chatUser.put(NodeNames.UNREAD_COUNT,Integer.parseInt(currentCount)+1);
+                chatUser.put(NodeNames.LAST_MESSAGE,lastMessage);
+                chatUser.put(NodeNames.LAST_MESSAGE_TIME,ServerValue.TIMESTAMP);
+
+                Map chatCurrent = new HashMap();
+                chatCurrent.put(NodeNames.UNREAD_COUNT,0);
+                chatCurrent.put(NodeNames.LAST_MESSAGE,lastMessage);
+                chatCurrent.put(NodeNames.LAST_MESSAGE_TIME,ServerValue.TIMESTAMP);
 
                 //put the chat map into chat userMap
-                Map chatUserMap = new HashMap();
-                chatUserMap.put(NodeNames.CHATS+ "/" + chatUserId +"/" +currentUserId,chatMap);
+                HashMap <String,Object> messageUserMap = new HashMap();
+                messageUserMap.put(NodeNames.CHATS + "/" + currentUserId + "/" + chatUserId, chatCurrent);
+                messageUserMap.put(NodeNames.CHATS + "/" + chatUserId + "/" + currentUserId, chatUser);
 
-                rootRef.updateChildren(chatUserMap, new DatabaseReference.CompletionListener() {
+
+                rootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(@Nullable DatabaseError error, @NonNull @NotNull DatabaseReference ref) {
                         if(error!=null){

@@ -89,4 +89,5 @@
     <string name="stop">End</string>
     <string name="cari">search</string>
     <string name="this_is_message">This is a Message</string>
+    <string name="start">start</string>
 </resources>

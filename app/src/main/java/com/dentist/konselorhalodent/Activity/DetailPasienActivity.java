@@ -29,8 +29,10 @@ public class DetailPasienActivity extends AppCompatActivity {
     private ImageButton btn_back;
     private TextView tv_umur,tv_email,tv_nama,tv_kelamin,tv_alamat,tv_nomor,tv_jawaban_1,tv_jawaban_2,tv_jawaban_3,tv_jawaban_4;
 
+    private TextView tv_kategori;
+    private TextView tv_nilai;
     private DatabaseReference databaseReferenceUser = FirebaseDatabase.getInstance().getReference().child(NodeNames.USERS);
-    private DatabaseReference databaseReferenceUserInterview = FirebaseDatabase.getInstance().getReference().child(NodeNames.INTERVIEW);
+    private DatabaseReference databaseReferenceUserSurvey = FirebaseDatabase.getInstance().getReference().child(NodeNames.SURVEYS);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class DetailPasienActivity extends AppCompatActivity {
         tv_kelamin = findViewById(R.id.tv_kelamin_user);
         tv_alamat = findViewById(R.id.tv_alamat_user);
         tv_nomor = findViewById(R.id.tv_nomer_user);
+        tv_kategori = findViewById(R.id.tv_jenis_karies);
+        tv_nilai = findViewById(R.id.tv_nilai_karies);
 
         tv_jawaban_1 = findViewById(R.id.tv_jawaban_1);
         tv_jawaban_2 = findViewById(R.id.tv_jawaban_2);
@@ -80,7 +84,7 @@ public class DetailPasienActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(DetailPasienActivity.this,R.string.failed_to_read_data,Toast.LENGTH_SHORT);
                 }
-                readUserInterviewDatabase(id);
+                readUserSurveyDatabase(id);
             }
 
             @Override
@@ -90,8 +94,8 @@ public class DetailPasienActivity extends AppCompatActivity {
         });
     }
 
-    private void readUserInterviewDatabase(String id){
-        databaseReferenceUserInterview.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void readUserSurveyDatabase(String id){
+        databaseReferenceUserSurvey.child(id).child("interview").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -104,6 +108,22 @@ public class DetailPasienActivity extends AppCompatActivity {
                     tv_jawaban_2.setText(keluhan);
                     tv_jawaban_3.setText(pengobatan);
                     tv_jawaban_4.setText(riwayat_penyakit);
+
+                    databaseReferenceUserSurvey.child(id).child("karies").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                            String kategori = snapshot.child("kategori").getValue().toString();
+                            String nilai = snapshot.child("score").getValue().toString();
+
+                            tv_kategori.setText(kategori);
+                            tv_nilai.setText(nilai);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+                        }
+                    });
 
                 }else{
                     Toast.makeText(DetailPasienActivity.this,R.string.failed_to_read_data,Toast.LENGTH_SHORT);
