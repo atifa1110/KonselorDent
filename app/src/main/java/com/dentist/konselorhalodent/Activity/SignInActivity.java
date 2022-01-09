@@ -51,7 +51,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
         //inisialisasi progress bar
         progress = new ProgressDialog(this);
-        progress.setMessage("Sign In .. please wait..");
+        progress.setMessage("Sign In .. Silahkan Tunggu..");
 
         //inisialisasi view yang di click
         tvDaftar.setOnClickListener(this);

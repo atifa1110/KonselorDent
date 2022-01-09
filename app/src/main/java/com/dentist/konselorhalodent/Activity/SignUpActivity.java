@@ -3,7 +3,9 @@ package com.dentist.konselorhalodent.Activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.dentist.konselorhalodent.Model.KonselorModel;
 import com.dentist.konselorhalodent.Model.MainActivity;
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.R;
@@ -34,8 +37,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private TextInputEditText etEmail, etName, etPassword, etConfirmPassword, etNomor;
     private Button btn_daftar;
-    private ProgressBar progressBar;
+    private Toolbar toolbar;
     private String email, nama, password, confirmPassword,nomor;
+    private ProgressDialog progress;
 
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
@@ -44,7 +48,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        setActionBar();
 
         //inisialisasi view
         etEmail = findViewById(R.id.et_email_signup);
@@ -53,24 +56,33 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         etConfirmPassword = findViewById(R.id.et_confirmpass_signup);
         etNomor = findViewById(R.id.et_nomor_signup);
         btn_daftar = findViewById(R.id.btn_daftar);
-        progressBar = findViewById(R.id.progressBar);
+        toolbar = findViewById(R.id.toolbar);
+
+        //inisialisasi progress bar
+        progress = new ProgressDialog(this);
+        progress.setMessage("Sign Up .. Silahkan Tunggu..");
 
         //set button click
         btn_daftar.setOnClickListener(this);
-        progressBar.setVisibility(View.GONE);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_daftar:
+                progress.show();
                 signUp(v);
                 break;
         }
     }
 
     public void updateDatabase(){
-        progressBar.setVisibility(View.VISIBLE);
         UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                 .setDisplayName(etName.getText().toString().trim())
                 .build();
@@ -78,27 +90,22 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         firebaseUser.updateProfile(request).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull @NotNull Task<Void> task) {
-                progressBar.setVisibility(View.GONE);
                 if(task.isSuccessful()){
                     String userId = firebaseUser.getUid();
 
                     databaseReference = FirebaseDatabase.getInstance().getReference().child(NodeNames.KONSELORS);
 
-                    HashMap hashMap = new HashMap();
-                    hashMap.put(NodeNames.PHOTO, "");
-                    hashMap.put(NodeNames.EMAIL,etEmail.getText().toString());
-                    hashMap.put(NodeNames.NAME ,etName.getText().toString());
-                    hashMap.put(NodeNames.PHONE_NUMBER ,etNomor.getText().toString());
+                    KonselorModel konselorModel = new KonselorModel(userId,"",etEmail.getText().toString(),"",etNomor.getText().toString(),"","","","","");
 
-                    progressBar.setVisibility(View.VISIBLE);
-                    databaseReference.child(userId).setValue(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    databaseReference.child(userId).setValue(konselorModel).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull @NotNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 //Toast.makeText(SignUpActivity.this, R.string.user_created_success, Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                                progressBar.setVisibility(View.GONE);
+                                progress.dismiss();
                             }else{
+                                progress.dismiss();
                                 Toast.makeText(SignUpActivity.this,
                                         getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
                             }
@@ -114,7 +121,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         password =etPassword.getText().toString().trim();
 
         if(inputValidated()){
-            progressBar.setVisibility(View.VISIBLE);
             final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
             firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
@@ -123,6 +129,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         firebaseUser = firebaseAuth.getCurrentUser();
                         updateDatabase();
                     }else {
+                        progress.dismiss();
                         Toast.makeText(SignUpActivity.this,
                                 getString(R.string.sign_up_failed, task.getException()), Toast.LENGTH_SHORT).show();
                     }
@@ -165,24 +172,4 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         return res;
     }
 
-    private void setActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle("");
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayOptions(actionBar.getDisplayOptions());
-        }
-    }
-
-    // this event will enable the back , function to the button on press
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

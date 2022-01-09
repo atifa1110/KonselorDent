@@ -6,13 +6,13 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
     tools:context=".Profile.EditProfileActivity">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_profile_profile"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/ic_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,8 +20,7 @@
 
     <TextView
         android:id="@+id/tv_ubah_profil"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Text"
         android:layout_marginTop="5dp"
         android:text="@string/ubah_foto_profil"
         app:layout_constraintEnd_toEndOf="parent"
@@ -30,11 +29,8 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_nama"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/TextInputLayout.clear"
         android:layout_marginTop="15dp"
-        app:endIconMode="clear_text"
         app:startIconDrawable="@drawable/ic_person"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,19 +38,14 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_nama_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/opensans_regular"
-            android:hint="@string/nama"
-            android:inputType="text"/>
+            style="@style/TextInputEditText.inputText"
+            android:hint="@string/nama" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_jenis_kelamin"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/TextInputLayout.clear"
         android:layout_marginTop="5dp"
         app:startIconDrawable="@drawable/ic_sex"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,9 +66,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_nim"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/TextInputLayout.clear"
         android:layout_marginTop="5dp"
         app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,20 +75,14 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_nim"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/opensans_regular"
-            android:hint="@string/nim"
-            android:inputType="text"/>
+            style="@style/TextInputEditText.inputText"
+            android:hint="@string/nim"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_nomor_ponsel"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/TextInputLayout.clear"
         android:layout_marginTop="5dp"
-        app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/til_nim"
@@ -108,22 +91,17 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_nomor_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/opensans_regular"
-            android:hint="@string/nomer_telpon"
+            style="@style/TextInputEditText.inputPhone"
+            android:hint="@string/nomer_ponsel"
             android:inputType="phone" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_simpan"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:background="@drawable/background_btn_green"
-        android:fontFamily="@font/opensans_regular"
+        style="@style/Button.Green"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
         android:text="@string/simpan"
-        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

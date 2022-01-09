@@ -97,7 +97,7 @@ public class JadwalActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(JadwalActivity.this, R.string.data_berhasil_disimpan, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(JadwalActivity.this, R.string.update_successful, Toast.LENGTH_SHORT).show();
                     finish();
                 }else{
                     Toast.makeText(JadwalActivity.this,

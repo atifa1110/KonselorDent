@@ -2,6 +2,7 @@ package com.dentist.konselorhalodent.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class DetailPasienActivity extends AppCompatActivity {
 
     private CircleImageView iv_profil;
-    private ImageButton btn_back;
+    private Toolbar toolbar;
     private TextView tv_umur,tv_email,tv_nama,tv_kelamin,tv_alamat,tv_nomor,tv_jawaban_1,tv_jawaban_2,tv_jawaban_3,tv_jawaban_4;
 
     private TextView tv_kategori;
@@ -48,6 +49,14 @@ public class DetailPasienActivity extends AppCompatActivity {
         tv_nomor = findViewById(R.id.tv_nomer_user);
         tv_kategori = findViewById(R.id.tv_jenis_karies);
         tv_nilai = findViewById(R.id.tv_nilai_karies);
+        toolbar = findViewById(R.id.toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         tv_jawaban_1 = findViewById(R.id.tv_jawaban_1);
         tv_jawaban_2 = findViewById(R.id.tv_jawaban_2);
@@ -57,14 +66,6 @@ public class DetailPasienActivity extends AppCompatActivity {
         String id = getIntent().getStringExtra(Extras.USER);
 
         readUserDatabase(id);
-
-        btn_back = findViewById(R.id.btn_back_detail_user);
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
     }
 
     private void readUserDatabase(String id){

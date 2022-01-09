@@ -1,5 +1,6 @@
 package com.dentist.konselorhalodent.Chat;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ public class GroupFragment extends Fragment {
     private List<GroupModel> groupList;
     private GroupAdapter groupAdapter;
     private View emptyChat;
+    private ProgressDialog progress;
 
     private DatabaseReference databaseReferenceGroups;
     private FirebaseUser currentUser;

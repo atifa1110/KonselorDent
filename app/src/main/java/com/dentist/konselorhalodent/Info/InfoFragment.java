@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.Model.TopikModel;
-import com.dentist.konselorhalodent.Activity.UploadFragment;
 import com.dentist.konselorhalodent.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;

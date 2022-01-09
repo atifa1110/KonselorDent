@@ -5,80 +5,59 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:padding="20dp"
     tools:context=".Profile.ProfileFragment">
 
-    <LinearLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_profile_profile_fragment"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:background="@drawable/ic_user"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_profile_profile_fragment"
         app:layout_constraintTop_toTopOf="parent">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_profile_profile_fragment"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/ic_user" />
+        <TextView
+            android:id="@+id/tv_nama_profile_fragment"
+            style="@style/Text.Semibold"
+            android:text="@string/contoh_nama"
+            android:textSize="18sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_marginStart="10dp"
-            android:orientation="vertical" >
+        <TextView
+            android:id="@+id/tv_email_profile_fragment"
+            style="@style/Text"
+            android:text="@string/email_contoh" />
 
-            <TextView
-                android:id="@+id/tv_nama_profile_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/opensans_semibold"
-                android:text="@string/contoh_nama"
-                android:textColor="@color/black"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/tv_email_profile_fragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/opensans_regular"
-                android:text="@string/email_contoh" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/ll_akun"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="5dp"
         android:layout_weight="2"
         android:background="@drawable/background"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2">
+        app:layout_constraintTop_toBottomOf="@+id/iv_profile_profile_fragment">
 
         <TextView
-            android:id="@+id/tv_akun"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/opensans_semibold"
-            android:text="@string/akun"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:id="@+id/tv_supervised"
+            style="@style/Text.Semibold"
+            android:layout_margin="16dp"
+            android:text="@string/akun"/>
 
         <View
             android:id="@+id/view"
@@ -88,50 +67,34 @@
 
         <Button
             android:id="@+id/btn_edit_profile"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            style="@style/Button.TextButton"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:drawableEnd="@drawable/ic_arrow_forward"
-            android:fontFamily="@font/opensans_regular"
-            android:text="@string/edit_profile"
-            android:textAlignment="textStart"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:text="@string/edit_profile" />
     </LinearLayout>
 
-
     <LinearLayout
-        android:id="@+id/ll_jadwal"
+        android:id="@+id/ll_cambra"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginTop="15dp"
         android:layout_weight="2"
         android:background="@drawable/background"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.354"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ll_akun">
 
         <TextView
-            android:id="@+id/tv_jadwal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/opensans_semibold"
-            android:text="Jadwal"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:id="@+id/ntv_cambra"
+            style="@style/Text.Semibold"
+            android:layout_margin="16dp"
+            android:text="@string/jadwal_chat_online" />
 
         <View
             android:id="@+id/view2"
@@ -141,37 +104,23 @@
 
         <Button
             android:id="@+id/btn_jadwal"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            style="@style/Button.TextButton"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:drawableEnd="@drawable/ic_arrow_forward"
-            android:fontFamily="@font/opensans_regular"
-            android:text="Detail Jadwal"
-            android:textAlignment="textStart"
-            android:textAllCaps="false"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:text="@string/jadwal" />
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_keluar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/background_btn_red"
-        android:fontFamily="@font/opensans_regular"
+        style="@style/Button.Red"
         android:text="@string/keluar"
-        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_jadwal" />
-
+        app:layout_constraintTop_toBottomOf="@+id/ll_cambra" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

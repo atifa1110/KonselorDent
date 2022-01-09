@@ -277,7 +277,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                             @Override
                                             public void onComplete(@NonNull @NotNull Task<Void> task) {
                                                 progress.dismiss();
-                                                Toast.makeText(EditProfileActivity.this, R.string.data_berhasil_disimpan, Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(EditProfileActivity.this, R.string.update_successful, Toast.LENGTH_SHORT).show();
                                                 finish();
                                             }
                                         });
@@ -332,7 +332,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                     public void onComplete(@NonNull @NotNull Task<Void> task) {
                                         if(task.isSuccessful()){
                                             progress.dismiss();
-                                            Toast.makeText(EditProfileActivity.this, R.string.data_berhasil_disimpan, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(EditProfileActivity.this, R.string.update_successful, Toast.LENGTH_SHORT).show();
                                             finish();
                                         }else{
                                             Toast.makeText(EditProfileActivity.this,
@@ -351,7 +351,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                         public void onComplete(@NonNull @NotNull Task<Void> task) {
                             if(task.isSuccessful()){
                                 progress.dismiss();
-                                Toast.makeText(EditProfileActivity.this, R.string.data_berhasil_disimpan, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditProfileActivity.this, R.string.update_successful, Toast.LENGTH_SHORT).show();
                                 finish();
                             }else{
                                 Toast.makeText(EditProfileActivity.this,

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,128 +7,83 @@
     android:layout_height="match_parent"
     tools:context=".Activity.DetailPasienActivity">
 
-    <View
-        android:id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:background="@color/blue"/>
+    <include
+        android:id="@+id/appbar"
+        layout="@layout/custom_action_layout" />
 
-    <ImageButton
-        android:id="@+id/btn_back_detail_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/ic_arrow_back"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_user"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        app:cardCornerRadius="20dp"
-        android:layout_below="@id/btn_back_detail_user">
+    <TextView
+        android:id="@+id/tv_nama_user_detail"
+        style="@style/Text.Semibold"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="@string/contoh_nama"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_user" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/tv_email_user_detail"
+        style="@style/Text"
+        android:gravity="center"
+        android:text="@string/email_contoh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_nama_user_detail" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_user"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/ic_user"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tv_konselor_detail"
+        style="@style/Text.Black"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:text="@string/participant"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_email_user_detail" />
 
-            <TextView
-                android:id="@+id/tv_nama_user_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/opensans_semibold"
-                android:gravity="center"
-                android:text="@string/contoh_nama"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_user" />
-
-            <TextView
-                android:id="@+id/tv_email_user_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:fontFamily="@font/opensans_regular"
-                android:gravity="center"
-                android:text="@string/email_contoh"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_nama_user_detail" />
-
-            <TextView
-                android:id="@+id/tv_konselor_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/opensans_regular"
-                android:gravity="center"
-                android:text="@string/participant"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_email_user_detail" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cardview">
+        android:layout_below="@+id/tv_konselor_detail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_konselor_detail" >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="20dp">
 
             <TextView
                 android:id="@+id/tv_about"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/opensans_bold"
-                android:text="About"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                style="@style/Text.Semibold"
+                android:text="@string/about"/>
 
             <TableLayout
                 android:id="@+id/tab_layout_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_about">
+                android:layout_below="@+id/tv_about">
 
                 <TableRow
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="5dp">
 
                     <TextView
-                        android:paddingEnd="10dp"
                         android:fontFamily="@font/opensans_regular"
+                        android:textSize="14dp"
                         android:text="Umur"/>
 
                     <TextView
@@ -144,33 +99,13 @@
                     android:layout_marginBottom="8dp">
 
                     <TextView
-                        android:paddingEnd="15dp"
                         android:fontFamily="@font/opensans_regular"
                         android:text="Jenis Kelamin"/>
 
                     <TextView
                         android:id="@+id/tv_kelamin_user"
-                        android:text="Perempuan"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/opensans_regular"/>
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp">
-
-                    <TextView
-                        android:paddingEnd="10dp"
-                        android:fontFamily="@font/opensans_regular"
-                        android:text="Alamat" />
-
-                    <TextView
-                        android:id="@+id/tv_alamat_user"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/opensans_regular"
-                        android:text="Grand depok city sektor anggrek 3 blok b4 \nno.2" />
+                        style="@style/Text.Black"
+                        android:text="Perempuan"/>
 
                 </TableRow>
 
@@ -180,181 +115,112 @@
                     android:layout_marginBottom="5dp">
 
                     <TextView
-                        android:paddingEnd="10dp"
+                        android:fontFamily="@font/opensans_regular"
+                        android:text="Alamat" />
+
+                    <TextView
+                        android:id="@+id/tv_alamat_user"
+                        style="@style/Text.Black"
+                        android:text="Grand depok city sektor anggrek 3 blok b4 \nno.2" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:paddingEnd="5dp"
                         android:text="Nomor Ponsel"
                         android:fontFamily="@font/opensans_regular"/>
 
                     <TextView
                         android:id="@+id/tv_nomer_user"
-                        android:text="087878601919"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/opensans_regular"/>
+                        style="@style/Text.Black"
+                        android:text="087878601919"/>
 
                 </TableRow>
             </TableLayout>
 
-            <View
-                android:id="@+id/view_tab_layout"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="#eee"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tab_layout_detail" />
-
             <TextView
                 android:id="@+id/tv_hasil_interview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/opensans_bold"
-                android:layout_marginStart="15dp"
+                style="@style/Text.Semibold"
+                android:layout_marginTop="10dp"
                 android:text="Hasil Interview"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_tab_layout" />
+                android:layout_below="@id/tab_layout_detail"/>
 
             <TextView
                 android:id="@+id/tv_interview_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/opensans_regular"
-                android:text="@string/interview_1"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_hasil_interview" />
+                style="@style/Text.Black"
+                android:layout_marginTop="5dp"
+                android:text="@string/apakah_anda_pernah"
+                android:layout_below="@+id/tv_hasil_interview" />
 
             <TextView
                 android:id="@+id/tv_jawaban_1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                style="@style/Text"
                 android:layout_marginTop="5dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/opensans_regular"
                 android:text="Ya"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_interview_1" />
+                android:layout_below="@id/tv_interview_1"/>
 
             <TextView
                 android:id="@+id/tv_interview_2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/opensans_regular"
-                android:text="@string/interview_2"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_jawaban_1" />
+                style="@style/Text.Black"
+                android:layout_marginTop="5dp"
+                android:text="@string/keluhan"
+                android:layout_below="@+id/tv_jawaban_1" />
 
             <TextView
                 android:id="@+id/tv_jawaban_2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                style="@style/Text"
                 android:layout_marginTop="5dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/opensans_regular"
                 android:text="Ya"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_interview_2" />
+                android:layout_below="@+id/tv_interview_2"/>
 
             <TextView
                 android:id="@+id/tv_interview_3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/opensans_regular"
-                android:text="@string/interview_3"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_jawaban_2" />
+                style="@style/Text.Black"
+                android:text="@string/pengobatan"
+                android:layout_below="@+id/tv_jawaban_2" />
 
             <TextView
                 android:id="@+id/tv_jawaban_3"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                style="@style/Text"
                 android:layout_marginTop="5dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/opensans_regular"
                 android:text="Ya"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_interview_3" />
+                android:layout_below="@+id/tv_interview_3" />
 
             <TextView
                 android:id="@+id/tv_interview_4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/opensans_regular"
-                android:text="@string/interview_4"
-                android:textAllCaps="false"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_jawaban_3" />
+                style="@style/Text.Black"
+                android:text="@string/silahkan_centang"
+                android:layout_below="@+id/tv_jawaban_3" />
 
             <TextView
                 android:id="@+id/tv_jawaban_4"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                style="@style/Text"
                 android:layout_marginTop="5dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:fontFamily="@font/opensans_regular"
                 android:text="Ya"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_interview_4" />
-
-            <View
-                android:id="@+id/view_hasil"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="#eee"
-                android:layout_marginTop="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_jawaban_4" />
+                android:layout_below="@+id/tv_interview_3" />
 
             <TextView
                 android:id="@+id/tv_hasil_karies"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/opensans_bold"
+                style="@style/Text.Semibold"
+                android:layout_marginTop="10dp"
                 android:text="Hasil Penilaian Gigi Karies"
-                android:layout_marginStart="15dp"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_hasil" />
+                android:layout_below="@id/tv_interview_4"/>
 
             <TableLayout
                 android:id="@+id/tab_layout_detail_karies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:paddingStart="15dp"
-                android:paddingEnd="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_hasil_karies">
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/tv_hasil_karies">
 
                 <TableRow
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp">
+                    android:layout_marginBottom="5dp">
 
                     <TextView
                         android:paddingEnd="10dp"
@@ -370,8 +236,7 @@
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:paddingEnd="15dp"
@@ -387,7 +252,6 @@
                 </TableRow>
 
             </TableLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
     </ScrollView>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
