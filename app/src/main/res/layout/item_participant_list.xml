@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/clParticipant"
     android:padding="5dp">
 
     <RelativeLayout
@@ -54,11 +55,11 @@
     <TextView
         android:id="@+id/tv_role"
         style="@style/Text.Black"
+        android:layout_below="@id/tv_online"
         android:layout_marginStart="16dp"
         android:layout_marginTop="3dp"
         android:layout_toEndOf="@+id/layout_image"
-        android:layout_below="@id/tv_online"
         android:text="@string/konselor"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 
 </RelativeLayout>

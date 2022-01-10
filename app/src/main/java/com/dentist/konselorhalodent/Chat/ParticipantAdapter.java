@@ -181,10 +181,10 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
             super(itemView);
 
             clParticipant = itemView.findViewById(R.id.clParticipant);
-            photoUser = itemView.findViewById(R.id.iv_profile_participant);
-            userName = itemView.findViewById(R.id.tv_nama_participant);
+            photoUser = itemView.findViewById(R.id.iv_profile_user);
+            userName = itemView.findViewById(R.id.tv_nama_user);
             userOnline = itemView.findViewById(R.id.tv_online);
-            roleParticipant = itemView.findViewById(R.id.tv_role_participant);
+            roleParticipant = itemView.findViewById(R.id.tv_role);
         }
     }
 }
