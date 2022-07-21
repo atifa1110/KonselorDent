@@ -11,9 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.dentist.konselorhalodent.Activity.DetailTopikActivity;
 import com.dentist.konselorhalodent.Model.Extras;
-import com.dentist.konselorhalodent.Model.TopikModel;
 import com.dentist.konselorhalodent.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,11 +23,11 @@ import java.util.List;
 public class TopikAdapter extends RecyclerView.Adapter<TopikAdapter.TopikViewHolder> {
 
     private Context context;
-    private List<TopikModel> topikModelList;
+    private List<Topiks> topiksList;
 
-    public TopikAdapter(Context context, List<TopikModel> topikModelList) {
+    public TopikAdapter(Context context, List<Topiks> topiksList) {
         this.context = context;
-        this.topikModelList = topikModelList;
+        this.topiksList = topiksList;
     }
 
     @NonNull
@@ -42,18 +40,18 @@ public class TopikAdapter extends RecyclerView.Adapter<TopikAdapter.TopikViewHol
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull TopikAdapter.TopikViewHolder holder, int position) {
-        TopikModel topikModel = topikModelList.get(position);
+        Topiks topiks = topiksList.get(position);
 
-        holder.topikName.setText(topikModel.getJudul());
+        holder.topikName.setText(topiks.getJudul());
 
-        String narasi = topikModel.getNarasi();
+        String narasi = topiks.getNarasi();
         narasi = narasi.length()>100?narasi.substring(0,100):narasi;
 
         holder.topikNarasi.setText(narasi+"...");
 
         try{
             Glide.with(context)
-                    .load(topikModel.getPhoto())
+                    .load(topiks.getPhoto())
                     .placeholder(R.drawable.ic_add_photo)
                     .centerCrop()
                     .into(holder.photoName);
@@ -63,9 +61,9 @@ public class TopikAdapter extends RecyclerView.Adapter<TopikAdapter.TopikViewHol
         }
 
         SimpleDateFormat sfd = new SimpleDateFormat("d MMM yyy HH:mm");
-        String dateTime = sfd.format(new Date(Long.parseLong(topikModel.getTimestamp())));
+        String dateTime = sfd.format(new Date(Long.parseLong(topiks.getTimestamp())));
         String [] splitString = dateTime.split(" ");
-        String topikTime = splitString[0]+" "+splitString[1];
+        String topikTime = splitString[0]+" "+splitString[1]+" "+splitString[2];
 
         holder.time.setText(topikTime);
 
@@ -73,7 +71,7 @@ public class TopikAdapter extends RecyclerView.Adapter<TopikAdapter.TopikViewHol
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailTopikActivity.class);
-                intent.putExtra(Extras.TOPIK, new TopikModel(topikModel.getId(),topikModel.getJudul(),topikModel.getPhoto(),topikModel.getNarasi(),topikModel.getSumber(),topikModel.getTimestamp(),topikModel.getTipe()));
+                intent.putExtra(Extras.TOPIK, new Topiks(topiks.getJudul(), topiks.getPhoto(), topiks.getNarasi(), topiks.getSumber(), topiks.getTimestamp(), topiks.getTipe()));
                 context.startActivity(intent);
             }
         });
@@ -81,7 +79,7 @@ public class TopikAdapter extends RecyclerView.Adapter<TopikAdapter.TopikViewHol
 
     @Override
     public int getItemCount() {
-        return topikModelList.size();
+        return topiksList.size();
     }
 
     public class TopikViewHolder extends RecyclerView.ViewHolder{

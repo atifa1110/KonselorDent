@@ -19,18 +19,17 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.dentist.konselorhalodent.Model.KonselorModel;
+import com.dentist.konselorhalodent.Model.Konselors;
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,18 +48,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
     private TextInputEditText etNama ,etNim ,etNomor;
     private AutoCompleteTextView etJenisKel;
     private Button btn_simpan;
-    private ImageView ivProfile;
+    private CircleImageView ivProfile;
     private ProgressDialog progress;
     private BottomSheetDialog bottomSheetDialog;
 
-    private KonselorModel konselor;
+    private Konselors konselor;
     private ArrayAdapter<String> jenisAdapter;
-    private String id,nama,email,photo,ponsel,status,role,nim,nem,angkatan,kelamin;
+    private String id,nama,email,photo,ponsel,status,role,nim,angkatan,kelamin;
     private Uri localFileUri, serverFileUri;
     private StorageReference fileStorage;
     private DatabaseReference databaseReferenceKonselor;
@@ -75,26 +76,27 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
         //inisialisasi view
         etNama = findViewById(R.id.et_nama_profile);
-        etJenisKel = findViewById(R.id.et_jenis_kelamin);
-        etNim = findViewById(R.id.et_nim);
+        etJenisKel = findViewById(R.id.et_jenis_profile);
+        etNim = findViewById(R.id.et_nim_profile);
         etNomor = findViewById(R.id.et_nomor_profile);
         btn_simpan = findViewById(R.id.btn_simpan);
-        ivProfile = findViewById(R.id.iv_profile_profile);
+        ivProfile =findViewById(R.id.iv_profile_profile);;
 
         bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_photo);
 
         progress= new ProgressDialog(this);
         progress.setMessage("Silahkan Tunggu..");
+        progress.show();
 
         //inisialisasi database
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
-        databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(NodeNames.KONSELORS);
+        databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(Konselors.class.getSimpleName());
         fileStorage = FirebaseStorage.getInstance().getReference();
 
         //set dropdown menu using array and adapter
-        setDropDownGender();
+        setDropDownMenu();
 
         btn_simpan.setOnClickListener(this);
         ivProfile.setOnClickListener(this);
@@ -103,7 +105,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         if(currentUser!=null) {
             etNama.setText(currentUser.getDisplayName());
             serverFileUri = currentUser.getPhotoUrl();
-            readUserDatabase();
+            getDataKonselor();
             if(serverFileUri!=null){
                 Glide.with(this)
                         .load(serverFileUri)
@@ -144,7 +146,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             case R.id.iv_profile_profile:
                 changeImage();
                 break;
-            case R.id.remove:
+            case R.id.delete:
                 removePhoto();
                 break;
             case R.id.choose:
@@ -156,8 +158,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void changeImage(){
-        LinearLayout remove = bottomSheetDialog.findViewById(R.id.remove);
-        LinearLayout choose = bottomSheetDialog.findViewById(R.id.choose);
+        MaterialButton remove = bottomSheetDialog.findViewById(R.id.delete);
+        MaterialButton choose = bottomSheetDialog.findViewById(R.id.choose);
 
         remove.setOnClickListener(this);
         choose.setOnClickListener(this);
@@ -201,7 +203,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     String userId = currentUser.getUid();
-                    databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(NodeNames.KONSELORS);
+                    databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(Konselors.class.getSimpleName());
 
                     databaseReferenceKonselor.child(userId).child(NodeNames.PHOTO).setValue(" ").addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -214,6 +216,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                 @Override
                                 public void onSuccess(Void unused) {
                                     ivProfile.setImageResource(R.drawable.ic_user);
+                                    finish();
                                     bottomSheetDialog.dismiss();
                                 }
                             });
@@ -224,13 +227,36 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-    private void setDropDownGender(){
+    private void setDropDownMenu(){
         //set dropdown menu using array and adapter
-        List<String> jenis = new ArrayList<String>();
-        jenis.add("Perempuan");
-        jenis.add("Laki-Laki");
-        jenisAdapter = new ArrayAdapter<>(getApplicationContext(),R.layout.dropdown_menu,jenis);
+        List<String> gender = new ArrayList<String>();
+        gender.add("Perempuan");
+        gender.add("Laki-Laki");
+        jenisAdapter = new ArrayAdapter<>(getApplicationContext(),R.layout.dropdown_menu,gender);
         etJenisKel.setAdapter(jenisAdapter);
+    }
+
+    private void getDataKonselor(){
+        databaseReferenceKonselor.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    progress.dismiss();
+                    Konselors konselors = snapshot.getValue(Konselors.class);
+                    etNama.setText(konselors.getNama());
+                    etJenisKel.setText(konselors.getKelamin());
+                    etNim.setText(konselors.getNim());
+                    etNomor.setText(konselors.getPonsel());
+                }else{
+                    Toast.makeText(EditProfileActivity.this,"Data tidak ada",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Toast.makeText(EditProfileActivity.this,"Data tidak ada",Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void updateUserProfilePhoto(){
@@ -264,14 +290,14 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                         email = currentUser.getEmail();
                                         photo = link;
                                         ponsel = etNomor.getText().toString();
-                                        status = "online";
+                                        status = "Online";
                                         role ="Konselor";
                                         nim = etNim.getText().toString();
                                         String setNim = etNim.getText().toString().length()>8?etNim.getText().toString().substring(0,2):etNim.getText().toString();
                                         angkatan = setAngkatan(setNim);
                                         kelamin = etJenisKel.getText().toString();
 
-                                        KonselorModel konselor = new KonselorModel(id,nama,email,photo,ponsel,status,role,nim,angkatan,kelamin);
+                                        Konselors konselor = new Konselors(id,nama,email,photo,ponsel,status,role,kelamin,nim,angkatan);
 
                                         databaseReferenceKonselor.child(id).setValue(konselor).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -309,7 +335,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     nama = etNama.getText().toString();
                     email = currentUser.getEmail();
                     ponsel = etNomor.getText().toString();
-                    status = "online";
+                    status = "Online";
                     role ="Konselor";
                     nim = etNim.getText().toString();
                     String setNim = etNim.getText().toString().length()>8?etNim.getText().toString().substring(0,2):etNim.getText().toString();
@@ -325,7 +351,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                 Log.d("uri",uri.toString());
                                 photo = uri.toString();
 
-                                konselor = new KonselorModel(id,nama,email,photo,ponsel,status,role,nim,angkatan,kelamin);
+                                konselor = new Konselors(id,nama,email,photo,ponsel,status,role,kelamin,nim,angkatan);
 
                                 databaseReferenceKonselor.child(id).setValue(konselor).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -344,7 +370,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                         });
                     }
 
-                    konselor = new KonselorModel(id,nama,email,photo,ponsel,status,role,nim,angkatan,kelamin);
+                    konselor = new Konselors(id,nama,email,photo,ponsel,status,role,kelamin,nim,angkatan);
 
                     databaseReferenceKonselor.child(id).setValue(konselor).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -363,27 +389,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     Toast.makeText(EditProfileActivity.this,
                             getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
-    }
-
-    private void readUserDatabase(){
-        databaseReferenceKonselor.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    etNama.setText(snapshot.child(NodeNames.NAME).getValue().toString());
-                    etJenisKel.setText(snapshot.child(NodeNames.JENIS_KELAMIN).getValue().toString());
-                    etNim.setText(snapshot.child(NodeNames.NIM).getValue().toString());
-                    etNomor.setText(snapshot.child(NodeNames.PHONE_NUMBER).getValue().toString());
-                }else{
-                    Toast.makeText(EditProfileActivity.this,"Data tidak ada",Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Toast.makeText(EditProfileActivity.this,"Data tidak ada",Toast.LENGTH_SHORT).show();
             }
         });
     }

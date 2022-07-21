@@ -6,7 +6,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.SignUpActivity">
+    tools:context=".SignIn.SignUpActivity">
 
     <include
         android:id="@+id/appbar"
@@ -14,21 +14,20 @@
 
     <TextView
         android:id="@+id/tv_selamat"
-        style="@style/Text.BoldBlack"
+        style="@style/Text.Medium"
+        android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
+        android:layout_marginStart="20dp"
         android:text="@string/sign_up_to_halo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbar" />
 
     <TextView
         android:id="@+id/tv_sign_in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
+        style="@style/Text"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
-        android:fontFamily="@font/opensans_regular"
         android:text="@string/masukkan_data"
         android:textColor="@color/gray"
         android:textSize="14sp"
@@ -36,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_selamat" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_email_password"
+        android:id="@+id/til_email_signup"
         style="@style/TextInputLayout.clear"
         android:layout_marginTop="20dp"
         app:startIconDrawable="@drawable/ic_email"
@@ -51,13 +50,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_nama"
+        android:id="@+id/til_nama_signup"
         style="@style/TextInputLayout.clear"
         android:layout_marginTop="8dp"
         app:startIconDrawable="@drawable/ic_person"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_email_password">
+        app:layout_constraintTop_toBottomOf="@+id/til_email_signup">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_nama_signup"
@@ -66,13 +65,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_password"
+        android:id="@+id/til_password_signup"
         style="@style/TextInputLayout"
         android:layout_marginTop="8dp"
         app:startIconDrawable="@drawable/ic_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_nama"
+        app:layout_constraintTop_toBottomOf="@+id/til_nama_signup"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -82,29 +81,29 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_confirm_password"
+        android:id="@+id/til_confirm_signup"
         style="@style/TextInputLayout"
         android:layout_marginTop="8dp"
         app:startIconDrawable="@drawable/ic_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_password"
+        app:layout_constraintTop_toBottomOf="@+id/til_password_signup"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_confirmpass_signup"
+            android:id="@+id/et_confirm_signup"
             style="@style/TextInputEditText.inputPassword"
             android:hint="@string/password_confirm"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_nomor_ponsel"
+        android:id="@+id/til_nomor_signup"
         style="@style/TextInputLayout.clear"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_confirm_password"
+        app:layout_constraintTop_toBottomOf="@+id/til_confirm_signup"
         app:prefixText="+62"
         app:prefixTextColor="@color/blue"
         app:startIconDrawable="@drawable/ic_phone">
@@ -115,35 +114,15 @@
             android:hint="@string/nomer_ponsel" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_daftar"
-        style="@style/Button.Green"
+        style="@style/Button.ColorGreen"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
         android:text="@string/daftar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_nomor_ponsel" />
-
-    <TextView
-        android:id="@+id/tv_belum_punya"
-        style="@style/Text"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="50dp"
-        android:text="@string/belum_punya_akun"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_daftar" />
-
-    <TextView
-        android:id="@+id/tv_masuk"
-        style="@style/Text.Semibold"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/sign_in"
-        android:textColor="@color/blue"
-        app:layout_constraintStart_toEndOf="@+id/tv_belum_punya"
-        app:layout_constraintTop_toBottomOf="@+id/btn_daftar" />
+        app:layout_constraintTop_toBottomOf="@+id/til_nomor_signup" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

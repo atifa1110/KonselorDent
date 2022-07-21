@@ -14,7 +14,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KonselorHaloDent">
-        <activity android:name=".Profile.JadwalActivity"></activity>
+        <activity
+            android:name=".SignIn.LupaPasswordSendActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".Chat.MainActivity"
+            android:exported="true"
+            android:label="@string/title_activity_bottom" />
 
         <service
             android:name=".Notification.ChatMessagesService"
@@ -28,24 +35,8 @@
         </service>
 
         <activity
-            android:name=".Activity.DetailPasienActivity"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".Chat.GroupActivity" />
-        <activity android:name=".Chat.GroupInfoActivity" />
-        <activity android:name=".Activity.DetailTopikActivity" />
-        <activity android:name=".Chat.ChatActivity" />
-        <activity android:name=".Profile.EditProfileActivity" />
-        <activity
-            android:name=".Activity.LupaPasswordActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".Activity.SignUpActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".Activity.SignInActivity"
-            android:screenOrientation="portrait"
+            android:name=".SignIn.SplashScreenActivity"
+            android:exported="true"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -53,7 +44,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Model.MainActivity" />
+        <activity
+            android:name=".Profile.TambahJadwalActivity"
+            android:exported="true" />
+        <activity android:name=".Profile.JadwalActivity" />
+        <activity android:name=".Chat.DetailPasienActivity" />
+        <activity android:name=".Chat.Group.GroupActivity" />
+        <activity android:name=".Chat.Group.GroupInfoActivity" />
+        <activity android:name=".Info.DetailTopikActivity" />
+        <activity android:name=".Chat.Chat.ChatActivity" />
+        <activity android:name=".Profile.EditProfileActivity" />
+        <activity
+            android:name=".SignIn.LupaPasswordActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SignIn.SignUpActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".SignIn.SignInActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

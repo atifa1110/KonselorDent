@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.dentist.konselorhalodent.Activity.SignInActivity;
+import com.dentist.konselorhalodent.SignIn.SignInActivity;
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,13 +36,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
-    private DatabaseReference databaseReferenceUser;
+    private DatabaseReference databaseReferenceKonselor;
     private Uri serverFileUri;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        return view;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
 
-        databaseReferenceUser = FirebaseDatabase.getInstance().getReference().child(NodeNames.KONSELORS).child(currentUser.getUid());
+        databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(NodeNames.KONSELORS).child(currentUser.getUid());
 
         if(firebaseAuth!=null){
             nama.setText(currentUser.getDisplayName());
@@ -120,7 +121,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     public void logout(View view){
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.signOut();
-        databaseReferenceUser.child(NodeNames.ONLINE).setValue("offline");
+        databaseReferenceKonselor.child(NodeNames.ONLINE).setValue("Offline");
         startActivity(new Intent(getActivity(), SignInActivity.class));
         getActivity().finish();
     }

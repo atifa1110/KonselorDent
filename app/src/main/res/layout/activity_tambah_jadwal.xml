@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Profile.TambahJadwalActivity">
+
+    <TextView
+        android:id="@+id/tv_pengawas_online"
+        style="@style/Text.Medium"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Pilih Dokter Pengawas"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_jadwal_dokter"
+        style="@style/TextInputLayout.dropDown"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_pengawas_online">
+
+        <AutoCompleteTextView
+            android:id="@+id/et_jadwal_dokter"
+            style="@style/TextInputEditText.inputText"
+            android:padding="16dp"
+            android:textSize="16sp"
+            android:hint="Dokter Pengawas" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_tanggal_online"
+        style="@style/Text.Medium"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:text="Tanggal"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_jadwal_dokter" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_tanggal"
+        style="@style/TextInputLayout.clear"
+        android:layout_marginTop="5dp"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_add_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tanggal_online">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_tanggal"
+            style="@style/TextInputEditText.inputText"
+            android:focusableInTouchMode="true"
+            android:hint="Tanggal"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_jadwal_online"
+        style="@style/Text.Medium"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:text="Waktu Chat Online"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_tanggal" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_jadwal_from"
+        style="@style/TextInputLayout.clear"
+        android:layout_marginTop="5dp"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_add_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_jadwal_online">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_jadwal_from"
+            style="@style/TextInputEditText.inputText"
+            android:focusableInTouchMode="true"
+            android:hint="Mulai"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_jadwal_to"
+        style="@style/TextInputLayout.clear"
+        android:layout_marginTop="5dp"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_add_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_jadwal_from">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_jadwal_to"
+            style="@style/TextInputEditText.inputText"
+            android:focusableInTouchMode="true"
+            android:hint="Selesai"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_simpan"
+        style="@style/Button.ColorGreen"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/simpan"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/til_jadwal_to" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

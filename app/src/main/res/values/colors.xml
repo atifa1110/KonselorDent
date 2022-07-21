@@ -18,6 +18,10 @@
     <color name="linkColor">#2196F3</color>
     <color name="search">#F0F3F4</color>
 
+    <color name="whitealpha">#10FFFFFF</color>
+    <color name="darkgray">#858585</color>
+    <color name="mediumgray">#DEDEDE</color>
+
     <color name="chat_background">#EDEDED</color>
     <!-- colors for tab and screent text -->
     <color name="tab_indicator_gray">#c0c0c0</color>

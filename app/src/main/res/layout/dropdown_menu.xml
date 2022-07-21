@@ -1,12 +1,10 @@
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/textview"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    style="@style/Text"
     android:ellipsize="end"
     android:maxLines="1"
     android:padding="16dp"
     android:textSize="16sp"
-    android:fontFamily="@font/opensans_regular"
     android:text="Text"
     android:textAppearance="?attr/textAppearanceSubtitle1" />
