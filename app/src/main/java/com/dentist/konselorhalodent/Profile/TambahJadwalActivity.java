@@ -137,7 +137,7 @@ public class TambahJadwalActivity extends AppCompatActivity {
             public void onClick(View v) {
                 MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
                         // set the title for the alert dialog
-                        .setTitleText("SELECT YOUR TIMING")
+                        .setTitleText("Pilih Waktu")
                         .setHour(0)
                         .setMinute(0)
                         .setTimeFormat(TimeFormat.CLOCK_24H)
@@ -178,7 +178,7 @@ public class TambahJadwalActivity extends AppCompatActivity {
             public void onClick(View v) {
                 MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
                         // set the title for the alert dialog
-                        .setTitleText("SELECT YOUR TIMING")
+                        .setTitleText("Pilih Waktu")
                         .setHour(0)
                         .setMinute(0)
                         .setTimeFormat(TimeFormat.CLOCK_24H)
@@ -219,7 +219,7 @@ public class TambahJadwalActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
-                        .setTitleText("Select date")
+                        .setTitleText("Pilih Tanggal")
                         .build();
                 datePicker.show(getSupportFragmentManager(), "date");
                 datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
@@ -227,7 +227,7 @@ public class TambahJadwalActivity extends AppCompatActivity {
                     public void onPositiveButtonClick(Object selection) {
                         String stringSelection = String.valueOf(selection);
                         Long convertedLong = Long.parseLong(stringSelection);
-                        SimpleDateFormat sfd = new SimpleDateFormat("EEE, dd MMMM yyyy");
+                        SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy");
                         String dateString = sfd.format(new Date(convertedLong));
                         input_tanggal.setText(dateString);
                     }

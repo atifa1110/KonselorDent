@@ -79,26 +79,22 @@ public class JadwalActivity extends AppCompatActivity {
     }
 
     private void getDataJadwal(){
-        databaseReferenceJadwal.addValueEventListener(new ValueEventListener() {
+        Query query = databaseReferenceJadwal.child(currentUser.getUid()).orderByChild("tanggal");
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 jadwalsList.clear();
                 progressDialog.dismiss();
-                if(snapshot.hasChild(currentUser.getUid())) {
-                    for (DataSnapshot ds : snapshot.child(currentUser.getUid()).getChildren()) {
-                        tv_tidak.setVisibility(View.GONE);
-                        if (snapshot.exists()) {
-                            Jadwals jadwals = ds.getValue(Jadwals.class);
-                            jadwals.setId(ds.getKey());
-                            jadwalsList.add(jadwals);
-                        }else{
-                            tv_tidak.setVisibility(View.VISIBLE);
-                        }
-                        jadwalAdapter.notifyDataSetChanged();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    tv_tidak.setVisibility(View.GONE);
+                    if (snapshot.exists()) {
+                        Jadwals jadwals = ds.getValue(Jadwals.class);
+                        jadwals.setId(ds.getKey());
+                        jadwalsList.add(jadwals);
+                    }else{
+                        tv_tidak.setVisibility(View.VISIBLE);
                     }
-                }else{
                     jadwalAdapter.notifyDataSetChanged();
-                    tv_tidak.setVisibility(View.VISIBLE);
                 }
             }
 

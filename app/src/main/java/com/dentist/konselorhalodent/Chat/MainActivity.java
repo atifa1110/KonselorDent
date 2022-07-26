@@ -49,4 +49,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        databaseReference.child(NodeNames.STATUS).setValue("Online");
+        databaseReference.child(NodeNames.STATUS).onDisconnect().setValue("Offline");
+    }
 }

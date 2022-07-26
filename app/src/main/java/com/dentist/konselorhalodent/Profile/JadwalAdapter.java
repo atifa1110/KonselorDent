@@ -22,6 +22,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class JadwalAdapter extends RecyclerView.Adapter<JadwalAdapter.JadwalViewHolder>{
@@ -45,7 +49,20 @@ public class JadwalAdapter extends RecyclerView.Adapter<JadwalAdapter.JadwalView
     public void onBindViewHolder(@NonNull JadwalViewHolder holder, int position) {
         Jadwals jadwal = jadwals.get(position);
 
-        holder.jadwalTanggal.setText(jadwal.getTanggal());
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = null;
+
+        try {
+            date = sdf.parse(jadwal.getTanggal());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        DateFormat formatter = new SimpleDateFormat("EEE, d MMMM yyyy");
+        String newFormat = formatter.format(date);
+
+        holder.jadwalTanggal.setText(newFormat);
+
         setDokterName(jadwal,holder);
         holder.jadwalJam.setText(jadwal.getMulai()+" - "+ jadwal.getSelesai());
 
