@@ -5,17 +5,18 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.dentist.konselorhalodent.Model.Dokters;
 import com.dentist.konselorhalodent.Model.NodeNames;
-import com.dentist.konselorhalodent.Model.Preference;
+import com.dentist.konselorhalodent.Utils.Preference;
 import com.dentist.konselorhalodent.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -40,11 +41,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TambahJadwalActivity extends AppCompatActivity {
+public class TambahJadwalActivity extends AppCompatActivity implements TextWatcher{
 
-    private TextInputEditText input_mulai,input_selesai,input_tanggal;
-    private TextInputLayout inputLayout_mulai,inputLayout_selesai,inputLayout_tanggal;
-    private AutoCompleteTextView et_dokter;
+    private TextInputEditText etMulai,etSelesai,etTanggal;
+    private TextInputLayout tilMulai,tilSelesai,tilTanggal,tilDokter;
+    private AutoCompleteTextView etDokter;
     private Button btn_simpan;
 
     private DokterAdapter dokterAdapter;
@@ -64,14 +65,15 @@ public class TambahJadwalActivity extends AppCompatActivity {
         databaseReferenceDokter = FirebaseDatabase.getInstance().getReference().child(NodeNames.DOKTERS);
         databaseReferenceJadwal = FirebaseDatabase.getInstance().getReference().child(NodeNames.JADWAL);
 
-        input_mulai = findViewById(R.id.et_jadwal_from);
-        input_selesai = findViewById(R.id.et_jadwal_to);
-        input_tanggal = findViewById(R.id.et_tanggal);
-        inputLayout_mulai = findViewById(R.id.til_jadwal_from);
-        inputLayout_selesai = findViewById(R.id.til_jadwal_to);;
-        inputLayout_tanggal = findViewById(R.id.til_tanggal);;
-        et_dokter = findViewById(R.id.et_jadwal_dokter);;
-        btn_simpan = findViewById(R.id.btn_simpan);;
+        etMulai = findViewById(R.id.et_jadwal_from);
+        etSelesai = findViewById(R.id.et_jadwal_to);
+        etTanggal = findViewById(R.id.et_tanggal);
+        etDokter = findViewById(R.id.et_jadwal_dokter);
+        tilMulai = findViewById(R.id.til_jadwal_from);
+        tilSelesai = findViewById(R.id.til_jadwal_to);
+        tilTanggal = findViewById(R.id.til_tanggal);
+        tilDokter = findViewById(R.id.til_jadwal_dokter);
+        btn_simpan = findViewById(R.id.btn_simpan);
 
         btn_simpan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,11 +82,11 @@ public class TambahJadwalActivity extends AppCompatActivity {
             }
         });
 
-        et_dokter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        etDokter.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Dokters dokter = (Dokters) parent.getAdapter().getItem(position);
-                et_dokter.setText(dokter.getNama());
+                etDokter.setText(dokter.getNama());
                 Preference.setKeyDokterId(getApplicationContext(),dokter.getId());
             }
         });
@@ -94,20 +96,21 @@ public class TambahJadwalActivity extends AppCompatActivity {
     }
 
     private void uploadJadwal() {
-        String timestamp = ""+System.currentTimeMillis();
-        Jadwals jadwals = new Jadwals(currentUser.getUid(),Preference.getKeyDokterId(getApplicationContext()),input_tanggal.getText().toString(),input_mulai.getText().toString(),input_selesai.getText().toString());
-        databaseReferenceJadwal.child(currentUser.getUid()).child(timestamp).setValue(jadwals).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull @NotNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    Toast.makeText(TambahJadwalActivity.this, R.string.update_successful, Toast.LENGTH_SHORT).show();
-                    finish();
-                }else{
-                    Toast.makeText(TambahJadwalActivity.this,
-                            getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
+        if(inputValidated()){
+            String timestamp = ""+System.currentTimeMillis();
+            Jadwals jadwals = new Jadwals(currentUser.getUid(),Preference.getKeyDokterId(getApplicationContext()),etTanggal.getText().toString(),etMulai.getText().toString(),etSelesai.getText().toString());
+            databaseReferenceJadwal.child(currentUser.getUid()).child(timestamp).setValue(jadwals).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull @NotNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(TambahJadwalActivity.this, R.string.update_successful, Toast.LENGTH_SHORT).show();
+                        finish();
+                    }else{
+                        Toast.makeText(TambahJadwalActivity.this, getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private void getDataDokter(){
@@ -120,7 +123,7 @@ public class TambahJadwalActivity extends AppCompatActivity {
                         dokterList.add(dokters);
                         dokterAdapter.notifyDataSetChanged();
                     }
-                    et_dokter.setAdapter(dokterAdapter);
+                    etDokter.setAdapter(dokterAdapter);
                 }
             }
 
@@ -132,7 +135,27 @@ public class TambahJadwalActivity extends AppCompatActivity {
     }
 
     private void setTime(){
-        inputLayout_mulai.setEndIconOnClickListener(new View.OnClickListener() {
+        etTanggal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
+                        .setTitleText("Pilih Tanggal")
+                        .build();
+                datePicker.show(getSupportFragmentManager(), "date");
+                datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
+                    @Override
+                    public void onPositiveButtonClick(Object selection) {
+                        String stringSelection = String.valueOf(selection);
+                        Long convertedLong = Long.parseLong(stringSelection);
+                        SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy");
+                        String dateString = sfd.format(new Date(convertedLong));
+                        etTanggal.setText(dateString);
+                    }
+                });
+            }
+        });
+
+        etMulai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
@@ -166,14 +189,13 @@ public class TambahJadwalActivity extends AppCompatActivity {
                             }
                         }
                         String jam_from = jam+":"+menit;
-                        Preference.setKeyJadwalFrom(getApplicationContext(),jam_from);
-                        input_mulai.setText(jam_from);
+                        etMulai.setText(jam_from);
                     }
                 });
             }
         });
 
-        inputLayout_selesai.setEndIconOnClickListener(new View.OnClickListener() {
+        etSelesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MaterialTimePicker materialTimePicker = new MaterialTimePicker.Builder()
@@ -207,35 +229,13 @@ public class TambahJadwalActivity extends AppCompatActivity {
                             }
                         }
                         String jam_to = jam+":"+menit;
-                        Preference.setKeyJadwalTo(getApplicationContext(),jam_to);
-                        input_selesai.setText(jam_to);
+                        etSelesai.setText(jam_to);
                     }
                 });
             }
         });
-
-
-        inputLayout_tanggal.setEndIconOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MaterialDatePicker datePicker = MaterialDatePicker.Builder.datePicker()
-                        .setTitleText("Pilih Tanggal")
-                        .build();
-                datePicker.show(getSupportFragmentManager(), "date");
-                datePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener() {
-                    @Override
-                    public void onPositiveButtonClick(Object selection) {
-                        String stringSelection = String.valueOf(selection);
-                        Long convertedLong = Long.parseLong(stringSelection);
-                        SimpleDateFormat sfd = new SimpleDateFormat("dd/MM/yyyy");
-                        String dateString = sfd.format(new Date(convertedLong));
-                        input_tanggal.setText(dateString);
-                    }
-                });
-            }
-        });
-
     }
+
     //set action bar
     private void setActionBar(){
         ActionBar actionBar = getSupportActionBar();
@@ -256,5 +256,46 @@ public class TambahJadwalActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean inputValidated(){
+        boolean res = true;
+        //jika text email kosong
+        if (etDokter.getText().toString().isEmpty()){
+            res = false;
+            //jika nama dokter kosong
+            tilDokter.setError("Error : Pilih Dokter");
+        }else if(etTanggal.getText().toString().isEmpty()){
+            res = false;
+            //jika data tanggal kosong
+            tilTanggal.setError("Error : Pilih Tanggal");
+        }else if (etMulai.getText().toString().isEmpty()){
+            res = false;
+            //jika waktu mulai kosong
+            tilMulai.setError("Error : Pilih Waktu Mulai");
+        }else if (etSelesai.getText().toString().isEmpty()){
+            res = false;
+            //jika waktu selesai kosong
+            tilSelesai.setError("Error : Pilih Waktu Selesai");
+        }
+        return res;
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        tilDokter.setError(null);
+        tilTanggal.setError(null);
+        tilMulai.setError(null);
+        tilSelesai.setError(null);
     }
 }

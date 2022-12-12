@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.dentist.konselorhalodent.Model.Extras;
+import com.dentist.konselorhalodent.Utils.Extras;
 import com.dentist.konselorhalodent.R;
 
 import java.text.SimpleDateFormat;

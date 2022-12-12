@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
-import com.dentist.konselorhalodent.Model.Extras;
+import com.dentist.konselorhalodent.Utils.Extras;
 import com.dentist.konselorhalodent.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,14 +42,14 @@ public class TopikAdapter extends RecyclerView.Adapter<TopikAdapter.TopikViewHol
     public void onBindViewHolder(@NonNull @NotNull TopikAdapter.TopikViewHolder holder, int position) {
         Topiks topiks = topiksList.get(position);
 
-        holder.topikName.setText(topiks.getJudul());
-
-        String narasi = topiks.getNarasi();
-        narasi = narasi.length()>100?narasi.substring(0,100):narasi;
-
-        holder.topikNarasi.setText(narasi+"...");
-
         try{
+            holder.topikName.setText(topiks.getJudul());
+
+            String narasi = topiks.getNarasi();
+            narasi = narasi.length()>100?narasi.substring(0,100):narasi;
+
+            holder.topikNarasi.setText(narasi+"...");
+
             Glide.with(context)
                     .load(topiks.getPhoto())
                     .placeholder(R.drawable.ic_add_photo)
@@ -58,6 +58,8 @@ public class TopikAdapter extends RecyclerView.Adapter<TopikAdapter.TopikViewHol
 
         }catch (Exception e){
             holder.photoName.setImageResource(R.drawable.ic_add_photo);
+            holder.topikNarasi.setText(" ");
+            holder.topikName.setText(" ");
         }
 
         SimpleDateFormat sfd = new SimpleDateFormat("d MMM yyy HH:mm");

@@ -1,4 +1,4 @@
-package com.dentist.konselorhalodent.Chat;
+package com.dentist.konselorhalodent.Model;
 
 public class Messages {
 

@@ -19,8 +19,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dentist.konselorhalodent.Chat.MainActivity;
-import com.dentist.konselorhalodent.Model.Util;
+import com.dentist.konselorhalodent.Utils.Util;
 import com.dentist.konselorhalodent.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -102,19 +101,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     Util.updateDeviceToken(SignInActivity.this,message);
                 }
             });
-//            FirebaseMessaging.getInstance().subscribeToTopic("messages").addOnCompleteListener(new OnCompleteListener<Void>() {
-//                @Override
-//                public void onComplete(@NonNull @NotNull Task<Void> task) {
-//                    String msg = getString(R.string.msg_subscribed);
-//                    if(task.isSuccessful()){
-//                        Util.updateDeviceToken(SignInActivity.this,msg);
-//                    }else{
-//                        msg = getString(R.string.msg_failed_subscribed);
-//                        Util.updateDeviceToken(SignInActivity.this,msg);
-//                    }
-//                }
-//            });
-
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
@@ -181,14 +167,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //jika text email kosong
         if (etEmail.getText().toString().isEmpty()){
             res = false;
-            //jika email kosong
             tilEmail.setError("Error : Email Kosong");
-            //tilEmail.requestFocus();
         }else if(!Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString().trim()).matches()){
             res = false;
-            //jika pattern email tidak sesuai dengan text email
             tilEmail.setError("Error : Email salah");
-            //tilEmail.requestFocus();
         }else if (etPassword.getText().toString().isEmpty() || etPassword.length()<6){
             res = false;
             //jika paswword yang dimasukkan kurang dari 6 dan kosong

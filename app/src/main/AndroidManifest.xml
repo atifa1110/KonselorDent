@@ -19,7 +19,7 @@
             android:exported="true"
             android:theme="@style/AppTheme"/>
         <activity
-            android:name=".Chat.MainActivity"
+            android:name=".SignIn.MainActivity"
             android:exported="true"
             android:label="@string/title_activity_bottom" />
 
@@ -40,7 +40,6 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -48,12 +47,15 @@
             android:name=".Profile.TambahJadwalActivity"
             android:exported="true" />
         <activity android:name=".Profile.JadwalActivity" />
-        <activity android:name=".Chat.DetailPasienActivity" />
-        <activity android:name=".Chat.Group.GroupActivity" />
-        <activity android:name=".Chat.Group.GroupInfoActivity" />
+        <activity android:name=".Groups.DetailPasienActivity" />
+        <activity android:name=".Groups.GroupActivity"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".Groups.GroupInfoActivity" />
         <activity android:name=".Info.DetailTopikActivity" />
-        <activity android:name=".Chat.Chat.ChatActivity" />
+        <activity android:name=".Chat.ChatActivity"
+            android:theme="@style/AppTheme"/>
         <activity android:name=".Profile.EditProfileActivity" />
+
         <activity
             android:name=".SignIn.LupaPasswordActivity"
             android:screenOrientation="portrait"

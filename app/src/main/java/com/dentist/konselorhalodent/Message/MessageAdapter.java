@@ -1,30 +1,29 @@
-package com.dentist.konselorhalodent.Chat;
+package com.dentist.konselorhalodent.Message;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.view.ActionMode;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.dentist.konselorhalodent.Model.Constant;
+import com.dentist.konselorhalodent.Utils.Constant;
 import com.dentist.konselorhalodent.Model.Dokters;
 import com.dentist.konselorhalodent.Model.Konselors;
+import com.dentist.konselorhalodent.Model.Messages;
 import com.dentist.konselorhalodent.Model.Pasiens;
 import com.dentist.konselorhalodent.R;
+import com.dentist.konselorhalodent.Utils.Util;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,10 +40,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     private Context context;
     private List<Messages> messageList;
-    private FirebaseAuth firebaseAuth;
-
-    private ActionMode actionMode;
-    private ConstraintLayout selectedView;
+    private FirebaseUser currentUser;
 
     public MessageAdapter(Context context, List<Messages> messageList) {
         this.context = context;
@@ -63,104 +59,74 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull  @NotNull MessageAdapter.MessageViewHolder holder, int position) {
         Messages messages = messageList.get(position);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        String currentUserId= firebaseAuth.getCurrentUser().getUid();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String fromUserId = messages.getMessageFrom();
 
-        Log.d(currentUserId,"currentID");
-        Log.d(fromUserId,"fromUser");
+        try{
+            holder.tvChatTime.setText(Util.getDay(messages.getMessageTime()));
+            //check
+            if(fromUserId.equals(currentUser.getUid())){
+                if(messages.getMessageType().equals(Constant.MESSAGE_TYPE_TEXT)){
+                    holder.card_llSent.setVisibility(View.VISIBLE);
+                    holder.tvSentMessageTime.setVisibility(View.VISIBLE);
+                    holder.ivSent.setVisibility(View.GONE);
+                    holder.tvImageSentTime.setVisibility(View.GONE);
+                }else{
+                    holder.ivSent.setVisibility(View.VISIBLE);
+                    holder.tvImageSentTime.setVisibility(View.VISIBLE);
+                    holder.card_llSent.setVisibility(View.GONE);
+                    holder.tvSentMessageTime.setVisibility(View.GONE);
+                }
+                holder.card_llReceived.setVisibility(View.GONE);
+                holder.tvReceivedMessageTime.setVisibility(View.GONE);
+                holder.ivReceived.setVisibility(View.GONE);
+                holder.tvImageReceivedTime.setVisibility(View.GONE);
 
-        SimpleDateFormat sfd = new SimpleDateFormat("dd MMM yyyy HH:mm");
-        String dateTime = sfd.format(new Date(Long.parseLong(messages.getMessageTime())));
-        String [] splitString = dateTime.split(" ");
-        String messageTime = splitString[3];
-        String datemonth = splitString[0]+" "+splitString[1]+" "+splitString[2];
+                holder.tvSentMessage.setText(messages.getMessage());
+                holder.tvSentMessageTime.setText(Util.getTime(messages.getMessageTime()));
+                holder.tvImageSentTime.setText(Util.getTime(messages.getMessageTime()));
 
-        holder.tvChatTime.setText(datemonth);
-        //check
-        if(fromUserId.equals(currentUserId)){
-            if(messages.getMessageType().equals(Constant.MESSAGE_TYPE_TEXT)){
-                holder.card_llSent.setVisibility(View.VISIBLE);
-                holder.tvSentMessageTime.setVisibility(View.VISIBLE);
+                try{
+                    Glide.with(context).load(messages.getMessage())
+                            .placeholder(R.drawable.ic_add_photo)
+                            .fitCenter()
+                            .into(holder.ivSent);
+                }catch (Exception e){
+                    holder.ivSent.setImageResource(R.drawable.ic_add_photo);
+                }
+            }else{
+                if(messages.getMessageType().equals(Constant.MESSAGE_TYPE_TEXT)){
+                    holder.card_llReceived.setVisibility(View.VISIBLE);
+                    holder.tvReceivedMessageTime.setVisibility(View.VISIBLE);
+                    holder.ivReceived.setVisibility(View.GONE);
+                    holder.tvImageReceivedTime.setVisibility(View.GONE);
+                    setUserName(messages,holder);
+                }else{
+                    holder.ivReceived.setVisibility(View.VISIBLE);
+                    holder.tvImageReceivedTime.setVisibility(View.VISIBLE);
+                    holder.card_llReceived.setVisibility(View.GONE);
+                    holder.tvReceivedMessageTime.setVisibility(View.GONE);
+                }
+                holder.card_llSent.setVisibility(View.GONE);
+                holder.tvSentMessageTime.setVisibility(View.GONE);
                 holder.ivSent.setVisibility(View.GONE);
                 holder.tvImageSentTime.setVisibility(View.GONE);
 
-                holder.card_llSent.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //creating a popup menu
-                        PopupMenu popup = new PopupMenu(context, holder.card_llSent);
-                        //inflating menu from xml resource
-                        popup.inflate(R.menu.menu_jadwal);
-                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem item) {
-                                switch (item.getItemId()){
-                                    case R.id.action_hapus:
+                holder.tvReceivedMessage.setText(messages.getMessage());
+                holder.tvReceivedMessageTime.setText(Util.getTime(messages.getMessageTime()));
+                holder.tvImageReceivedTime.setText(Util.getTime(messages.getMessageTime()));
 
-                                        break;
-                                }
-                                return false;
-                            }
-                        });
-                        popup.show();
-                    }
-                });
-
-            }else{
-                holder.ivSent.setVisibility(View.VISIBLE);
-                holder.tvImageSentTime.setVisibility(View.VISIBLE);
-                holder.card_llSent.setVisibility(View.GONE);
-                holder.tvSentMessageTime.setVisibility(View.GONE);
+                try{
+                    Glide.with(context).load(messages.getMessage())
+                            .placeholder(R.drawable.ic_add_photo)
+                            .fitCenter()
+                            .into(holder.ivReceived);
+                }catch (Exception e){
+                    holder.ivReceived.setImageResource(R.drawable.ic_add_photo);
+                }
             }
-            holder.card_llReceived.setVisibility(View.GONE);
-            holder.tvReceivedMessageTime.setVisibility(View.GONE);
-            holder.ivReceived.setVisibility(View.GONE);
-            holder.tvImageReceivedTime.setVisibility(View.GONE);
-
-            holder.tvSentMessage.setText(messages.getMessage());
-            holder.tvSentMessageTime.setText(messageTime);
-            holder.tvImageSentTime.setText(messageTime);
-
-            try{
-                Glide.with(context).load(messages.getMessage())
-                        .placeholder(R.drawable.ic_add_photo)
-                        .fitCenter()
-                        .into(holder.ivSent);
-            }catch (Exception e){
-                holder.ivSent.setImageResource(R.drawable.ic_add_photo);
-            }
-
-        }else{
-            if(messages.getMessageType().equals(Constant.MESSAGE_TYPE_TEXT)){
-                holder.card_llReceived.setVisibility(View.VISIBLE);
-                holder.tvReceivedMessageTime.setVisibility(View.VISIBLE);
-                holder.ivReceived.setVisibility(View.GONE);
-                holder.tvImageReceivedTime.setVisibility(View.GONE);
-                setUserName(messages,holder);
-            }else{
-                holder.ivReceived.setVisibility(View.VISIBLE);
-                holder.tvImageReceivedTime.setVisibility(View.VISIBLE);
-                holder.card_llReceived.setVisibility(View.GONE);
-                holder.tvReceivedMessageTime.setVisibility(View.GONE);
-            }
-            holder.card_llSent.setVisibility(View.GONE);
-            holder.tvSentMessageTime.setVisibility(View.GONE);
-            holder.ivSent.setVisibility(View.GONE);
-            holder.tvImageSentTime.setVisibility(View.GONE);
-
-            holder.tvReceivedMessage.setText(messages.getMessage());
-            holder.tvReceivedMessageTime.setText(messageTime);
-            holder.tvImageReceivedTime.setText(messageTime);
-
-            try{
-                Glide.with(context).load(messages.getMessage())
-                        .placeholder(R.drawable.ic_add_photo)
-                        .fitCenter()
-                        .into(holder.ivReceived);
-            }catch (Exception e){
-                holder.ivReceived.setImageResource(R.drawable.ic_add_photo);
-            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         //tag is a mechanism to make your views remember something,

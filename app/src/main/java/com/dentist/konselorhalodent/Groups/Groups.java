@@ -1,4 +1,4 @@
-package com.dentist.konselorhalodent.Chat.Group;
+package com.dentist.konselorhalodent.Groups;
 
 public class Groups {
 

@@ -12,12 +12,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.dentist.konselorhalodent.Chat.Group.GroupActivity;
-import com.dentist.konselorhalodent.Model.Util;
+import com.dentist.konselorhalodent.Chat.ChatActivity;
+import com.dentist.konselorhalodent.Groups.GroupActivity;
+import com.dentist.konselorhalodent.Utils.Extras;
+import com.dentist.konselorhalodent.Utils.Util;
 import com.dentist.konselorhalodent.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -28,13 +31,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.acl.Group;
 import java.util.Map;
 
 public class ChatMessagesService extends FirebaseMessagingService {
 
-    private static final String TAG = "notification";
+    private static final String TAG = "ChatMessageService";
     private static final String CHANNEL_ID = "channel";
-    String img_url = null;
     Bitmap image_bitmap = null;
 
     @Override
@@ -47,22 +50,26 @@ public class ChatMessagesService extends FirebaseMessagingService {
     public void onMessageReceived(@NonNull @NotNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        String title = remoteMessage.getNotification().getTitle();
-        String message = remoteMessage.getNotification().getBody();
-        String image = remoteMessage.getData().get("image");
-
-        if(remoteMessage.getNotification()!=null){
-            if(message.equals("New Image")){
-                image_bitmap = getBitmapFromURL(image);
-                showNotification(title,message,image_bitmap);
-            }else{
-                //create and display notification
-                showNotification(title,message,null);
-            }
-        }
         if(!remoteMessage.getData().isEmpty()){
-            Map<String,String> myData = remoteMessage.getData();
-            Log.d(TAG,myData.get("image"));
+            Map<String,String> data = remoteMessage.getData();
+            Log.d(TAG,data.get("title"));
+            Log.d(TAG,data.get("body"));
+            Log.d(TAG,data.get("image"));
+            Log.d(TAG,data.get("chatid"));
+            Log.d(TAG,data.get("to"));
+
+            //check if the app is running in foreground or background
+            //cause we want to get notification when the app is closed
+            if(!Util.isAppInForeground(getApplicationContext())) {
+                //create and display notification
+                if (data.get("image").startsWith("https://firebasestorage")) {
+                    image_bitmap = getBitmapFromURL(data.get("image"));
+                    showNotification(data.get("title"), data.get("body"), image_bitmap, data.get("chatid"), data.get("to"));
+                } else {
+                    //create and display notification
+                    showNotification(data.get("title"), data.get("body"), null, data.get("chatid"), data.get("to"));
+                }
+            }
         }
     }
 
@@ -81,19 +88,23 @@ public class ChatMessagesService extends FirebaseMessagingService {
         }
     }
 
-    private void showNotification(String title, String message,Bitmap image){
+    private void showNotification(String title, String message,Bitmap image,String id,String to){
         //create notification channel for API 26+
         createNotificationChannel();
 
-        Intent intent = new Intent(getApplicationContext(), GroupActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
+        Intent intentChat = new Intent(getApplicationContext(), ChatActivity.class);
+        intentChat.putExtra(Extras.USER_KEY,id);
+        intentChat.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntentChat = PendingIntent.getActivity(getApplicationContext(), 0, intentChat, 0);
+
+        Intent intentGroup = new Intent(getApplicationContext(), GroupActivity.class);
+        intentGroup.putExtra(Extras.GROUP_KEY,id);
+        intentGroup.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntentGroup = PendingIntent.getActivity(getApplicationContext(), 1, intentGroup, 0);
 
         Uri defaultNotificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this
-                ,CHANNEL_ID)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_logo_tooth)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .setContentTitle(title)
@@ -101,13 +112,17 @@ public class ChatMessagesService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setSound(defaultNotificationSound)
                 .setLights(Color.GREEN,500,200)
-                .setVibrate(new long[]{0,250,250,250})
                 .setColor(getResources().getColor(R.color.design_default_color_primary))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent);
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         if(image!=null){
             builder.setLargeIcon(image);
+        }
+
+        if(to.equals("Chat")){
+            builder.setContentIntent(pendingIntentChat);
+        }else{
+            builder.setContentIntent(pendingIntentGroup);
         }
 
         //notification ID is unique for each notification you create
@@ -124,7 +139,6 @@ public class ChatMessagesService extends FirebaseMessagingService {
 
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,name,importance);
             channel.setDescription(description);
-            channel.setVibrationPattern(new long[]{0,250,250,250});
             //Register the channel with the system
             //You cannot change importance or other notification behaviours after this
             NotificationManager manager = getSystemService(NotificationManager.class);

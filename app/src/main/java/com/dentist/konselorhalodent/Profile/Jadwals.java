@@ -4,24 +4,24 @@ import java.io.Serializable;
 
 public class Jadwals implements Serializable {
 
-    private String id,konselor_id,dokter_id,tanggal,mulai,selesai;
+    private String id,konselorId,dokterId,tanggal,mulai,selesai;
 
     public Jadwals(){
 
     }
 
-    public Jadwals(String konselor_id, String dokter_id, String tanggal, String mulai, String selesai) {
-        this.konselor_id = konselor_id;
-        this.dokter_id = dokter_id;
+    public Jadwals(String konselorId, String dokterId, String tanggal, String mulai, String selesai) {
+        this.konselorId = konselorId;
+        this.dokterId = dokterId;
         this.tanggal = tanggal;
         this.mulai = mulai;
         this.selesai = selesai;
     }
 
-    public Jadwals(String id, String konselor_id, String dokter_id, String tanggal, String mulai, String selesai) {
+    public Jadwals(String id, String konselorId, String dokterId, String tanggal, String mulai, String selesai) {
         this.id = id;
-        this.konselor_id = konselor_id;
-        this.dokter_id = dokter_id;
+        this.konselorId = konselorId;
+        this.dokterId = dokterId;
         this.tanggal = tanggal;
         this.mulai = mulai;
         this.selesai = selesai;
@@ -44,20 +44,20 @@ public class Jadwals implements Serializable {
         this.tanggal = tanggal;
     }
 
-    public String getKonselor_id() {
-        return konselor_id;
+    public String getKonselorId() {
+        return konselorId;
     }
 
-    public void setKonselor_id(String konselor_id) {
-        this.konselor_id = konselor_id;
+    public void setKonselorId(String konselor_id) {
+        this.konselorId = konselor_id;
     }
 
-    public String getDokter_id() {
-        return dokter_id;
+    public String getDokterId() {
+        return dokterId;
     }
 
-    public void setDokter_id(String dokter_id) {
-        this.dokter_id = dokter_id;
+    public void setDokterId(String dokterId) {
+        this.dokterId = dokterId;
     }
 
     public String getMulai() {

@@ -1,16 +1,15 @@
-package com.dentist.konselorhalodent.Model;
+package com.dentist.konselorhalodent.Utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
+import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.Notification.Api;
-import com.dentist.konselorhalodent.Notification.Data;
-import com.dentist.konselorhalodent.Notification.Message;
-import com.dentist.konselorhalodent.Notification.Notification;
+import com.dentist.konselorhalodent.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,19 +18,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
@@ -53,69 +50,27 @@ public class Util {
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
             DatabaseReference databaseReference = rootRef.child(NodeNames.TOKENS).child(currentUser.getUid());
 
-//            HashMap<String,String> hashMap = new HashMap<>();
-//            hashMap.put(NodeNames.DEVICE_TOKEN,token);
-
             databaseReference.child(NodeNames.DEVICE_TOKEN).setValue(token).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(!task.isSuccessful()){
-                        Toast.makeText(context,"Gagal menyimpan Token Device",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,context.getString(R.string.failed_get_token,task.getException()),Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         }
     }
 
-    public static void updateChatDetails(Context context, String currentUserId, String chatUserId, String lastMessage, String lastMessageTime){
+    public static void updateChatDetails(Context context, String currentUserId, String chatUserId,String message,String time){
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        //asking the chat user whenever we sent the message unread count will
-        //increament
-        DatabaseReference chatRef = rootRef.child(NodeNames.CHATS).child(chatUserId).child(currentUserId);
+        DatabaseReference chatRef1 = rootRef.child(NodeNames.CHATS).child(chatUserId).child(currentUserId);
+        DatabaseReference chatRef2 = rootRef.child(NodeNames.CHATS).child(currentUserId).child(chatUserId);
 
-        chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                String currentCount = "0";
-                //jika sudah ada di database
-                if(snapshot.child(NodeNames.UNREAD_COUNT).getValue()!=null){
-                    currentCount = snapshot.child(NodeNames.UNREAD_COUNT).getValue().toString();
-                }
-
-                Map chatUser = new HashMap();
-                chatUser.put(NodeNames.UNREAD_COUNT,Integer.parseInt(currentCount)+1);
-                chatUser.put(NodeNames.LAST_MESSAGE,lastMessage);
-                chatUser.put(NodeNames.LAST_MESSAGE_TIME,lastMessageTime);
-
-                Map chatCurrent = new HashMap();
-                chatCurrent.put(NodeNames.UNREAD_COUNT,0);
-                chatCurrent.put(NodeNames.LAST_MESSAGE,lastMessage);
-                chatCurrent.put(NodeNames.LAST_MESSAGE_TIME,lastMessageTime);
-
-                //put the chat map into chat userMap
-                HashMap <String,Object> messageUserMap = new HashMap();
-                messageUserMap.put(NodeNames.CHATS + "/" + currentUserId + "/" + chatUserId, chatCurrent);
-                messageUserMap.put(NodeNames.CHATS + "/" + chatUserId + "/" + currentUserId, chatUser);
-
-
-                rootRef.updateChildren(messageUserMap, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull @NotNull DatabaseReference ref) {
-                        if(error!=null){
-                            //Toast.makeText(context,context.getString(R.string.something_wrong,error.getMessage()),Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
-            }
-        });
+        chatRef1.child("lastMessageTime").setValue(time);
+        chatRef2.child("lastMessageTime").setValue(time);
     }
 
-    public static void sendNotification(Context context, List<String> to, String title, String message, String image,String userId){
+    public static void sendNotification(Context context, List<String> to, String title, String message, String image,String groupId){
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference databaseReference = rootRef.child(NodeNames.TOKENS);
 
@@ -142,25 +97,23 @@ public class Util {
                             .build();
 
                     Api api = retrofit.create(Api.class);
-                    Call<ResponseBody> call = api.sendNotification(deviceToken,deviceToken1,title,message,image);
+                    Call<ResponseBody> call = api.sendNotification(deviceToken,deviceToken1,title,message,image,groupId);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                            try{
-//                                Toast.makeText(context.getApplicationContext(), response.body().string(),Toast.LENGTH_SHORT).show();
-//                            }catch (IOException e){
-//                                e.printStackTrace();
-//                            }
+                            if(response.isSuccessful()){
+                                Log.d("Response Body" , "Response Body Success: "+ response.body());
+                            }else{
+                                Log.d("Response Body" , "Response Body Error: "+ response.code());
+                                Toast.makeText(context,context.getString(R.string.failed_to_send_notification,response.errorBody()),Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            //Toast.makeText(context.getApplicationContext(), t.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context,context.getString(R.string.failed_to_send_notification,t.getMessage()),Toast.LENGTH_SHORT).show();
                         }
                     });
-
-                }else{
-                    Toast.makeText(context,"token tidak ada",Toast.LENGTH_SHORT).show();
                 }
             }
             @Override
@@ -170,7 +123,7 @@ public class Util {
         });
     }
 
-    public static void sendNotificationChat(Context context,String title,String message,String image,String userId){
+    public static void sendNotificationChat(Context context,String title,String message,String image,String currentUser,String userId){
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference databaseReference = rootRef.child(NodeNames.TOKENS).child(userId);
 
@@ -192,20 +145,21 @@ public class Util {
                             .build();
 
                     Api api = retrofit.create(Api.class);
-                    Call<ResponseBody> call = api.sendNotificationChat(deviceToken,title,message,image);
+                    Call<ResponseBody> call = api.sendNotificationChat(deviceToken,title,message,image,currentUser);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//                            try{
-//                                Toast.makeText(context.getApplicationContext(), response.body().string(),Toast.LENGTH_SHORT).show();
-//                            }catch (IOException e){
-//                                e.printStackTrace();
-//                            }
+                            if(response.isSuccessful()){
+                                Log.d("Response Body" , "Response Body Success: "+ response.body());
+                            }else{
+                                Log.d("Response Body" , "Response Body Error: "+ response.code());
+                                Toast.makeText(context,context.getString(R.string.failed_to_send_notification,response.errorBody()),Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            //Toast.makeText(context.getApplicationContext(), t.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context,context.getString(R.string.failed_to_send_notification,t.getMessage()),Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -221,7 +175,7 @@ public class Util {
         //set date format
         SimpleDateFormat sfd = new SimpleDateFormat("EEE dd MMM yyyy HH:mm");
         String dateTime = sfd.format(time);
-
+        
         //split date format
         String [] splitString = dateTime.split(" ");
         String day = splitString[0];
@@ -249,6 +203,37 @@ public class Util {
         }else{
             return text = date;
         }
+    }
+
+    public static String getDay(String time){
+        SimpleDateFormat sfd = new SimpleDateFormat("dd MMM yyy HH:mm");
+        String dateTime = sfd.format(new Date(Long.parseLong(time)));
+        String [] splitString = dateTime.split(" ");
+        String day = splitString[0]+" "+splitString[1]+" "+splitString[2];
+        return day;
+    }
+
+    public static String getTime(String time){
+        SimpleDateFormat sfd = new SimpleDateFormat("dd MMM yyy HH:mm");
+        String dateTime = sfd.format(new Date(Long.parseLong(time)));
+        String [] splitString = dateTime.split(" ");
+        String waktu = splitString[3];
+        return waktu ;
+    }
+
+    public static boolean isAppInForeground(Context context) {
+        List<ActivityManager.RunningTaskInfo> task =
+                ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
+                        .getRunningTasks(1);
+        if (task.isEmpty()) {
+            // app is in background
+            return false;
+        }
+        return task
+                .get(0)
+                .topActivity
+                .getPackageName()
+                .equalsIgnoreCase(context.getPackageName());
     }
 }
 

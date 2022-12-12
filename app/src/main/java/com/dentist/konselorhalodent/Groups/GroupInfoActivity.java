@@ -1,4 +1,4 @@
-package com.dentist.konselorhalodent.Chat.Group;
+package com.dentist.konselorhalodent.Groups;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;

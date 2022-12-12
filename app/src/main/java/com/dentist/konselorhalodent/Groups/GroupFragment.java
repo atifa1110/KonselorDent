@@ -1,6 +1,5 @@
-package com.dentist.konselorhalodent.Chat.Group;
+package com.dentist.konselorhalodent.Groups;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,13 +8,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.dentist.konselorhalodent.R;
 import com.dentist.konselorhalodent.Model.NodeNames;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -37,35 +36,31 @@ public class GroupFragment extends Fragment {
     private List<Groups> groupList;
     private GroupAdapter groupAdapter;
     private View emptyChat;
-    private ProgressDialog progressDialog;
 
     private DatabaseReference databaseReferenceGroups;
     private FirebaseUser currentUser;
-
-    private ChildEventListener childEventListener;
     private Query query;
 
-    private List<String> userIds;
+    private ShimmerFrameLayout shimmerFrameLayoutGroup;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_group, container, false);
         return view;
     }
 
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //inisialisasi semua view
         rvChat = view.findViewById(R.id.rv_chats_groups);
         emptyChat = view.findViewById(R.id.ll_empty_chat);
 
-        ////set array list
-        userIds = new ArrayList<>();
+        //set array list
         groupList = new ArrayList<>();
         groupAdapter = new GroupAdapter(getContext(),groupList);
+        shimmerFrameLayoutGroup = view.findViewById(R.id.shimmer_group);
 
         //set layout
         LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
@@ -76,33 +71,41 @@ public class GroupFragment extends Fragment {
         rvChat.setLayoutManager(linearLayout);
         rvChat.setAdapter(groupAdapter);
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Silahkan Tunggu..");
-        progressDialog.show();
-
         //inisialisasi database
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReferenceGroups = FirebaseDatabase.getInstance().getReference().child(NodeNames.GROUPS);
 
-        loadGroupChat();
         emptyChat.setVisibility(View.VISIBLE);
+        loadGroupChat();
     }
 
     private void loadGroupChat(){
+        emptyChat.setVisibility(View.GONE);
+        shimmerFrameLayoutGroup.startShimmer();
         //set query dengan diurutkan dengan waktu kirim
         query = databaseReferenceGroups.orderByChild(NodeNames.TIME_STAMP);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 groupList.clear();
-                progressDialog.dismiss();
-                for (DataSnapshot ds : snapshot.getChildren()){
-                    if(ds.child("Participants").child(currentUser.getUid()).exists()) {
-                        emptyChat.setVisibility(View.GONE);
+                shimmerFrameLayoutGroup.stopShimmer();
+                shimmerFrameLayoutGroup.setVisibility(View.GONE);
+                if(snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
                         Groups groups = ds.getValue(Groups.class);
-                        groupList.add(groups);
+                        if (!ds.child(NodeNames.PARTICIPANTS).child(currentUser.getUid()).exists()) {
+                            rvChat.setVisibility(View.GONE);
+                            emptyChat.setVisibility(View.VISIBLE);
+                        } else {
+                            rvChat.setVisibility(View.VISIBLE);
+                            emptyChat.setVisibility(View.GONE);
+                            groupList.add(groups);
+                            groupAdapter.notifyDataSetChanged();
+                        }
                     }
-                    groupAdapter.notifyDataSetChanged();
+                }else{
+                    rvChat.setVisibility(View.GONE);
+                    emptyChat.setVisibility(View.VISIBLE);
                 }
             }
 

@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.dentist.konselorhalodent.Chat.MainActivity;
 import com.dentist.konselorhalodent.Model.Konselors;
 import com.dentist.konselorhalodent.R;
 import com.google.android.gms.tasks.OnCompleteListener;

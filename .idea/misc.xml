@@ -10,6 +10,7 @@
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/background_edittext.xml" value="0.14375" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/background_search.xml" value="0.14375" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/backgroung_edittext.xml" value="0.14375" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_add_photo.xml" value="0.13203125" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_arrow_back_black.xml" value="0.14375" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_attachment.xml" value="0.131640625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_baseline_stop_24.xml" value="0.131640625" />
@@ -20,19 +21,24 @@
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_circle_gray.xml" value="0.131640625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_delete.xml" value="0.131640625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_dentalcare.xml" value="0.131640625" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_info.xml" value="0.13125" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_info_black.xml" value="0.13125" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_logo_blue.xml" value="0.14375" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_logo_tooth.xml" value="0.131640625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.131640625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_photo.xml" value="0.14375" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_play_arrow_black.xml" value="0.13125" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_stop.xml" value="0.13125" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/drawable/ic_stop_black.xml" value="0.13125" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_admin.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_bottom.xml" value="0.131640625" />
-        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_chat.xml" value="0.10826502732240437" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_chat.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_detail_pasien.xml" value="0.22" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_detail_topik.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_edit_profile.xml" value="0.16666666666666666" />
-        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_group.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_group.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_group_info.xml" value="0.1" />
-        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_jadwal.xml" value="0.13333333333333333" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_jadwal.xml" value="0.22" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_lupa_password.xml" value="0.109375" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_lupa_password_send.xml" value="0.118359375" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/activity_main.xml" value="0.11953125" />
@@ -46,22 +52,28 @@
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/bottom_sheet_photo.xml" value="0.134765625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/custom_action_bar.xml" value="0.131640625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/custom_action_layout.xml" value="0.10826502732240437" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/custom_bar.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/custom_progress_bar.xml" value="0.109375" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/dropdown_menu.xml" value="0.109375" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/file_progress.xml" value="0.119140625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/fragment_chat.xml" value="0.10826502732240437" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/fragment_chat_personal.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/fragment_group.xml" value="0.134765625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/fragment_info.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/fragment_profile.xml" value="0.131640625" />
-        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_chat_list.xml" value="0.134765625" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_chat_list.xml" value="0.22" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_group_list.xml" value="0.134765625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_jadwal_layout.xml" value="0.2441505595116989" />
-        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_message_list.xml" value="0.22" />
-        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_participant_list.xml" value="0.4466666666666667" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_message_list.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_participant_list.xml" value="0.22" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_snackbar.xml" value="0.131640625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/item_topik_hangat.xml" value="0.37947122861586313" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/layout_empty_chat.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/layout_search_view.xml" value="0.134765625" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/shimmer_chat_list.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/shimmer_group_list.xml" value="0.131640625" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/shimmer_jadwal_list.xml" value="0.22" />
+        <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/layout/shimmer_topik_hangat.xml" value="0.131640625" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/menu/bottom_nav_menu.xml" value="0.119921875" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/menu/menu_action_bar.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/Adiva/Documents/AndroidStudioProjects/KonselorHaloDent/app/src/main/res/menu/menu_bottom.xml" value="0.131640625" />

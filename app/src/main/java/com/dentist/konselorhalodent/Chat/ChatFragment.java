@@ -1,4 +1,4 @@
-package com.dentist.konselorhalodent.Chat.Chat;
+package com.dentist.konselorhalodent.Chat;
 
 import android.os.Bundle;
 
@@ -14,7 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.dentist.konselorhalodent.Chat.Group.GroupFragment;
+import com.dentist.konselorhalodent.Groups.GroupFragment;
 import com.dentist.konselorhalodent.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -65,7 +65,7 @@ public class ChatFragment extends Fragment {
     private void setupViewPager(ViewPager2 viewPager) {
         adapter = new ViewPagerAdapter(getChildFragmentManager(), getLifecycle());
         adapter.addFragment(new GroupFragment(), "Groups");
-        adapter.addFragment(new ChatPersonalFragment(), "Chats");
+        adapter.addFragment(new ChatDokterFragment(), "Chats");
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(1);

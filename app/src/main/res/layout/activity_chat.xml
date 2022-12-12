@@ -6,7 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/chat_background"
-    tools:context=".Chat.Chat.ChatActivity">
+    tools:context=".Chat.ChatActivity">
+
+    <include
+        android:id="@+id/appbar"
+        layout="@layout/custom_bar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +21,7 @@
         android:id="@+id/llProgress"
         android:background="@android:color/white"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -47,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:src="@drawable/ic_attachment"
+            android:src="@drawable/ic_attach_file_black"
             app:tint="@color/gray" />
 
         <ImageView

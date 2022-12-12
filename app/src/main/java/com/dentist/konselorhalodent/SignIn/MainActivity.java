@@ -1,10 +1,13 @@
-package com.dentist.konselorhalodent.Chat;
+package com.dentist.konselorhalodent.SignIn;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import com.dentist.konselorhalodent.Model.Konselors;
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.R;
+import com.dentist.konselorhalodent.Utils.NetworkChangeListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,11 +23,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationView navView;
 
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
+
+    private NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +38,15 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(Konselors.class.getSimpleName()).child(currentUser.getUid());
+        databaseReference = FirebaseDatabase.getInstance().getReference().child(NodeNames.KONSELORS).child(currentUser.getUid());
 
         databaseReference.child(NodeNames.STATUS).setValue("Online");
         databaseReference.child(NodeNames.STATUS).onDisconnect().setValue("Offline");
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_chat, R.id.navigation_info, R.id.navigation_profile)
-                .build();
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.navigation_chat, R.id.navigation_info, R.id.navigation_profile).build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_bottom);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
@@ -52,7 +55,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkChangeListener,filter);
         databaseReference.child(NodeNames.STATUS).setValue("Online");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(networkChangeListener);
+        databaseReference.child(NodeNames.STATUS).onDisconnect().setValue("Offline");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         databaseReference.child(NodeNames.STATUS).onDisconnect().setValue("Offline");
     }
 }

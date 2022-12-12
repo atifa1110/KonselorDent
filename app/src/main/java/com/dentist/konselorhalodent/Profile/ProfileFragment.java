@@ -57,31 +57,21 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         btn_keluar = view.findViewById(R.id.btn_keluar);
         btn_jadwal = view.findViewById(R.id.btn_jadwal);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        currentUser = firebaseAuth.getCurrentUser();
-
-        databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(NodeNames.KONSELORS).child(currentUser.getUid());
-
-        if(firebaseAuth!=null){
-            nama.setText(currentUser.getDisplayName());
-            email.setText(currentUser.getEmail());
-            serverFileUri= currentUser.getPhotoUrl();
-            if(serverFileUri!=null)
-            {
-                Glide.with(this)
-                        .load(serverFileUri)
-                        .placeholder(R.drawable.ic_user)
-                        .error(R.drawable.ic_user)
-                        .into(ivProfile);
-            }
-        }else{
-            nama.setText("");
-            email.setText("");
-        }
-
         btn_edit_profile.setOnClickListener(this);
         btn_jadwal.setOnClickListener(this);
         btn_keluar.setOnClickListener(this);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+        databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(NodeNames.KONSELORS).child(currentUser.getUid());
+
+        loadProfile();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadProfile();
     }
 
     @Override
@@ -98,7 +88,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
                         .setPositiveButton("iya", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                logout(v);
+                                logout();
                             }
                         }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
                     @Override
@@ -118,7 +108,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    public void logout(View view){
+    public void loadProfile(){
+        if(firebaseAuth!=null){
+            nama.setText(currentUser.getDisplayName());
+            email.setText(currentUser.getEmail());
+            serverFileUri= currentUser.getPhotoUrl();
+            if(serverFileUri!=null)
+            {
+                Glide.with(this)
+                        .load(serverFileUri)
+                        .placeholder(R.drawable.ic_user)
+                        .error(R.drawable.ic_user)
+                        .into(ivProfile);
+            }
+        }else{
+            nama.setText("");
+            email.setText("");
+        }
+    }
+
+    public void logout(){
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.signOut();
         databaseReferenceKonselor.child(NodeNames.ONLINE).setValue("Offline");

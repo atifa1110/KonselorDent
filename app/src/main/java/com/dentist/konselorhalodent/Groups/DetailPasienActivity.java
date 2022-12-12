@@ -1,4 +1,4 @@
-package com.dentist.konselorhalodent.Chat;
+package com.dentist.konselorhalodent.Groups;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -12,7 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.dentist.konselorhalodent.Model.Extras;
+import com.dentist.konselorhalodent.Model.Interviews;
+import com.dentist.konselorhalodent.Utils.Extras;
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.Model.Pasiens;
 import com.dentist.konselorhalodent.R;
@@ -69,15 +70,20 @@ public class DetailPasienActivity extends AppCompatActivity {
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
                     Pasiens pasiens = snapshot.getValue(Pasiens.class);
-                    tv_nama.setText(pasiens.getNama());
-                    tv_umur.setText(pasiens.getUsia()+" Tahun");
-                    tv_email.setText(pasiens.getEmail());
-                    tv_kelamin.setText(pasiens.getKelamin());
-                    tv_alamat.setText(pasiens.getAlamat());
-                    tv_nomor.setText("0"+pasiens.getPonsel());
+                    try{
+                        tv_nama.setText(pasiens.getNama());
+                        tv_umur.setText(pasiens.getUsia()+" Tahun");
+                        tv_email.setText(pasiens.getEmail());
+                        tv_kelamin.setText(pasiens.getKelamin());
+                        tv_alamat.setText(pasiens.getAlamat());
+                        tv_nomor.setText("0"+pasiens.getPonsel());
 
-                    Glide.with(getApplicationContext()).load(pasiens.getPhoto()).placeholder(R.drawable.ic_user)
-                            .into(iv_profil);
+                        Glide.with(getApplicationContext()).load(pasiens.getPhoto()).placeholder(R.drawable.ic_user)
+                                .into(iv_profil);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        Toast.makeText(DetailPasienActivity.this,"Data Gagal",Toast.LENGTH_SHORT).show();
+                    }
                 }else{
                     Toast.makeText(DetailPasienActivity.this,R.string.failed_to_read_data,Toast.LENGTH_SHORT);
                 }
@@ -92,7 +98,7 @@ public class DetailPasienActivity extends AppCompatActivity {
     }
 
     private void getDataSurvey(String id){
-        databaseReferenceUserSurvey.child(id).child(Interviews.class.getSimpleName()).addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReferenceUserSurvey.child(id).child(NodeNames.INTERVIEW).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if(snapshot.exists()){

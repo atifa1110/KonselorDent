@@ -1,4 +1,4 @@
-package com.dentist.konselorhalodent.Chat.Group;
+package com.dentist.konselorhalodent.Groups;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import com.bumptech.glide.Glide;
 import com.dentist.konselorhalodent.Model.Dokters;
 import com.dentist.konselorhalodent.Model.Pasiens;
 import com.dentist.konselorhalodent.R;
-import com.dentist.konselorhalodent.Model.Extras;
-import com.dentist.konselorhalodent.Model.Util;
+import com.dentist.konselorhalodent.Utils.Extras;
+import com.dentist.konselorhalodent.Utils.Util;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -54,30 +54,31 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     public void onBindViewHolder(@NonNull @NotNull GroupAdapter.GroupViewHolder holder, int position) {
         Groups groups = groupList.get(position);
 
-        final String groupId = groups.getGroupId();
-        if(groups.getStatus().equals("selesai")){
-            holder.divider.setVisibility(View.VISIBLE);
-            holder.groupSelesai.setVisibility(View.VISIBLE);
-        }else{
-            holder.divider.setVisibility(View.GONE);
-            holder.groupSelesai.setVisibility(View.GONE);
-        }
-
-        holder.groupName.setText(groups.groupTitle);
-        loadLastMessage(groups,holder);
         try{
+            if(groups.getStatus().equals("selesai")){
+                holder.divider.setVisibility(View.VISIBLE);
+                holder.groupSelesai.setVisibility(View.VISIBLE);
+            }else{
+                holder.divider.setVisibility(View.GONE);
+                holder.groupSelesai.setVisibility(View.GONE);
+            }
+
+            holder.groupName.setText(groups.groupTitle);
+            loadLastMessage(groups,holder);
+
             Glide.with(context).load(R.drawable.ic_group).
                     fitCenter().error(R.drawable.ic_group)
                     .into(holder.groupPhoto);
         }catch (Exception e){
             holder.groupPhoto.setImageResource(R.drawable.ic_group);
+            holder.groupName.setText(" ");
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context,GroupActivity.class);
-                intent.putExtra(Extras.GROUP_KEY,groupId);
+                intent.putExtra(Extras.GROUP_KEY,groups.getGroupId());
                 intent.putExtra(Extras.GROUP_NAME, groups.getGroupTitle());
                 intent.putExtra(Extras.GROUP_PHOTO, groups.getGroupIcon());
                 context.startActivity(intent);

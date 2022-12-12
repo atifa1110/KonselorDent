@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -39,14 +40,13 @@ public class InfoFragment extends Fragment implements CompoundButton.OnCheckedCh
     private TopikAdapter topikAdapter;
     private List<Topiks> topikList;
     private TextInputEditText searchText;
-    private ProgressDialog progressDialog;
 
     private DatabaseReference databaseReferenceTopik;
     private Chip chip_foto,chip_video;
+    private ShimmerFrameLayout shimmerFrameLayoutInfo;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_info, container, false);
         return view;
@@ -57,14 +57,13 @@ public class InfoFragment extends Fragment implements CompoundButton.OnCheckedCh
     public void onViewCreated(@NonNull @NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("Silahkan Tunggu..");
-        progressDialog.show();
-
         chip_foto = view.findViewById(R.id.chip_foto);
         chip_video = view.findViewById(R.id.chip_video);
         searchText =view.findViewById(R.id.searchView);
         searchText.setHint("Cari Berita..");
+
+        shimmerFrameLayoutInfo = view.findViewById(R.id.shimmer_info);
+        shimmerFrameLayoutInfo.startShimmer();
 
         rvTopik = view.findViewById(R.id.rv_info);
         databaseReferenceTopik = FirebaseDatabase.getInstance().getReference().child(NodeNames.TOPIKS);
@@ -113,7 +112,9 @@ public class InfoFragment extends Fragment implements CompoundButton.OnCheckedCh
                 topikList.clear();
                 for(DataSnapshot ds : snapshot.getChildren()){
                     if(ds.exists()) {
-                        progressDialog.dismiss();
+                        shimmerFrameLayoutInfo.stopShimmer();
+                        shimmerFrameLayoutInfo.setVisibility(View.GONE);
+                        rvTopik.setVisibility(View.VISIBLE);
                         Topiks topiks = ds.getValue(Topiks.class);
                         topikList.add(topiks);
                         topikAdapter.notifyDataSetChanged();
@@ -137,14 +138,11 @@ public class InfoFragment extends Fragment implements CompoundButton.OnCheckedCh
                 topikList.clear();
                 for (DataSnapshot data : snapshot.getChildren()) {
                     if (data.exists()) {
-                        progressDialog.dismiss();
                         Topiks topiks = data.getValue(Topiks.class);
                         if(topiks.getJudul().toLowerCase().contains(query.toLowerCase()) ||
                                 topiks.getNarasi().toLowerCase().contains(query.toLowerCase())){
                             topikList.add(topiks);
                             topikAdapter.notifyDataSetChanged();
-                        }else{
-                            progressDialog.dismiss();
                         }
                     }
                 }
@@ -164,7 +162,6 @@ public class InfoFragment extends Fragment implements CompoundButton.OnCheckedCh
                 topikList.clear();
                 for (DataSnapshot data : snapshot.getChildren()) {
                     if (data.exists()) {
-                        progressDialog.dismiss();
                         Topiks topiks = data.getValue(Topiks.class);
                         if(topiks.getTipe().contains(foto.toLowerCase())){
                             topikList.add(topiks);
@@ -188,7 +185,6 @@ public class InfoFragment extends Fragment implements CompoundButton.OnCheckedCh
                 topikList.clear();
                 for (DataSnapshot data : snapshot.getChildren()) {
                     if (data.exists()) {
-                        progressDialog.dismiss();
                         Topiks topiks = data.getValue(Topiks.class);
                         if(topiks.getTipe().contains(video.toLowerCase())){
                             topikList.add(topiks);
@@ -212,7 +208,6 @@ public class InfoFragment extends Fragment implements CompoundButton.OnCheckedCh
             case R.id.chip_foto:
                 if(isChecked){
                     String foto = "photo";
-                    progressDialog.show();
                     searchFoto(foto);
                 }else{
                     getDataTopik();
@@ -221,7 +216,6 @@ public class InfoFragment extends Fragment implements CompoundButton.OnCheckedCh
             case R.id.chip_video:
                 if(isChecked){
                     String video = "video";
-                    progressDialog.show();
                     searchVideo(video);
                 }else{
                     getDataTopik();

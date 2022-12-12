@@ -46,8 +46,12 @@ public class DokterAdapter extends ArrayAdapter<Dokters> {
             holder = (DokterHolder) row.getTag();
         }
 
-        Dokters dokter = dokters.get(position);
-        holder.textView.setText(dokter.getNama());
+        try{
+            Dokters dokter = dokters.get(position);
+            holder.textView.setText(dokter.getNama());
+        }catch (Exception e){
+            holder.textView.setText(" ");
+        }
 
         return row;
     }

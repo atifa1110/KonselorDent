@@ -1,4 +1,4 @@
-package com.dentist.konselorhalodent.Chat.Group;
+package com.dentist.konselorhalodent.Groups;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,16 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.dentist.konselorhalodent.Chat.DetailPasienActivity;
 import com.dentist.konselorhalodent.Model.Dokters;
-import com.dentist.konselorhalodent.Model.Extras;
+import com.dentist.konselorhalodent.Utils.Extras;
 import com.dentist.konselorhalodent.Model.Konselors;
 import com.dentist.konselorhalodent.Model.Pasiens;
 import com.dentist.konselorhalodent.Model.Users;
@@ -56,18 +54,23 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
     public void onBindViewHolder(@NonNull @NotNull ParticipantViewHolder holder, int position) {
         Users user = participantList.get(position);
 
-        if (user.getRole().equals("Pasien")){
-            setUserName(user,holder);
-        }else if(user.getRole().equals("Konselor")){
-            setKonselorName(user,holder);
-        }else if(user.getRole().equals("Dokter Pengawas")){
-            setDokterName(user,holder);
+        try{
+            if (user.getRole().equals("Pasien")){
+                setUserName(user,holder);
+            }else if(user.getRole().equals("Konselor")){
+                setKonselorName(user,holder);
+            }else if(user.getRole().equals("Dokter Pengawas")){
+                setDokterName(user,holder);
+            }
+
+            holder.roleParticipant.setText(user.getRole());
+
+            holder.clParticipant.setTag(R.id.TAG_PARTIPANT_ROLE, user.getRole());
+            holder.clParticipant.setTag(R.id.TAG_PARTIPANT_ID, user.getId());
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
-
-        holder.roleParticipant.setText(user.getRole());
-
-        holder.clParticipant.setTag(R.id.TAG_PARTIPANT_ROLE, user.getRole());
-        holder.clParticipant.setTag(R.id.TAG_PARTIPANT_ID, user.getId());
 
         holder.clParticipant.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,12 +93,16 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 Pasiens pasiens = snapshot.getValue(Pasiens.class);
-                holder.userName.setText(pasiens.getNama());
-                holder.userOnline.setText(pasiens.getStatus());
-                holder.userOnline.setTextColor(setColor(pasiens.getStatus()));
-                holder.circleImageView.setImageDrawable(setDrawable(pasiens.getStatus()));
-                Glide.with(context).load(pasiens.getPhoto()).error(R.drawable.ic_user).placeholder(R.drawable.ic_user)
-                        .into(holder.photoUser);
+                try{
+                    holder.userName.setText(pasiens.getNama());
+                    holder.userOnline.setText(pasiens.getStatus());
+                    holder.userOnline.setTextColor(setColor(pasiens.getStatus()));
+                    holder.circleImageView.setImageDrawable(setDrawable(pasiens.getStatus()));
+                    Glide.with(context).load(pasiens.getPhoto()).error(R.drawable.ic_user).placeholder(R.drawable.ic_user)
+                            .into(holder.photoUser);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -112,12 +119,16 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 Konselors konselors = snapshot.getValue(Konselors.class);
-                holder.userName.setText(konselors.getNama());
-                holder.userOnline.setText(konselors.getStatus());
-                holder.userOnline.setTextColor(setColor(konselors.getStatus()));
-                holder.circleImageView.setImageDrawable(setDrawable(konselors.getStatus()));
-                Glide.with(context).load(konselors.getPhoto()).placeholder(R.drawable.ic_user)
-                        .into(holder.photoUser);
+                try {
+                    holder.userName.setText(konselors.getNama());
+                    holder.userOnline.setText(konselors.getStatus());
+                    holder.userOnline.setTextColor(setColor(konselors.getStatus()));
+                    holder.circleImageView.setImageDrawable(setDrawable(konselors.getStatus()));
+                    Glide.with(context).load(konselors.getPhoto()).placeholder(R.drawable.ic_user)
+                            .into(holder.photoUser);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
             }
 
@@ -135,12 +146,16 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 Dokters dokters = snapshot.getValue(Dokters.class);
-                holder.userName.setText(dokters.getNama());
-                holder.userOnline.setText(dokters.getStatus());
-                holder.userOnline.setTextColor(setColor(dokters.getStatus()));
-                holder.circleImageView.setImageDrawable(setDrawable(dokters.getStatus()));
-                Glide.with(context).load(dokters.getPhoto()).placeholder(R.drawable.ic_user)
-                        .into(holder.photoUser);
+                try {
+                    holder.userName.setText(dokters.getNama());
+                    holder.userOnline.setText(dokters.getStatus());
+                    holder.userOnline.setTextColor(setColor(dokters.getStatus()));
+                    holder.circleImageView.setImageDrawable(setDrawable(dokters.getStatus()));
+                    Glide.with(context).load(dokters.getPhoto()).placeholder(R.drawable.ic_user)
+                            .into(holder.photoUser);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {

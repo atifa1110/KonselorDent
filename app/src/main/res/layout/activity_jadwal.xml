@@ -11,15 +11,41 @@
         android:id="@+id/tv_jadwal_tidak"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
         android:text="@string/jadwal_tidak_ada"
+        android:textColor="@color/black"
+        android:visibility="gone"
         android:gravity="center"/>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_jadwal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/shimmer_jadwal_list"/>
+            <include layout="@layout/shimmer_jadwal_list"/>
+            <include layout="@layout/shimmer_jadwal_list"/>
+            <include layout="@layout/shimmer_jadwal_list"/>
+            <include layout="@layout/shimmer_jadwal_list"/>
+            <include layout="@layout/shimmer_jadwal_list"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_all_jadwal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

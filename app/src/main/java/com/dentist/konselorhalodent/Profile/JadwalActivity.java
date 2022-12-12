@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.dentist.konselorhalodent.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,8 +40,8 @@ public class JadwalActivity extends AppCompatActivity {
     private List<Jadwals> jadwalsList;
     private RecyclerView rv_jadwal;
     private JadwalAdapter jadwalAdapter;
-    private ProgressDialog progressDialog;
     private TextView tv_tidak;
+    private ShimmerFrameLayout shimmerFrameLayoutJadwal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +50,9 @@ public class JadwalActivity extends AppCompatActivity {
         setActionBar();
 
         rv_jadwal = findViewById(R.id.rv_all_jadwal);
-        btn_tambah = findViewById(R.id.btn_tambah);;
-        tv_tidak = findViewById(R.id.tv_jadwal_tidak);;
-
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Silahkan Tunggu..");
-        progressDialog.show();
+        btn_tambah = findViewById(R.id.btn_tambah);
+        tv_tidak = findViewById(R.id.tv_jadwal_tidak);
+        shimmerFrameLayoutJadwal = findViewById(R.id.shimmer_jadwal);
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
@@ -74,27 +72,33 @@ public class JadwalActivity extends AppCompatActivity {
             }
         });
 
-        getDataJadwal();
         tv_tidak.setVisibility(View.VISIBLE);
+        getDataJadwal();
     }
 
     private void getDataJadwal(){
+        tv_tidak.setVisibility(View.GONE);
+        shimmerFrameLayoutJadwal.startShimmer();
+        //Set query urutkan sesuai tanggal jadwal
         Query query = databaseReferenceJadwal.child(currentUser.getUid()).orderByChild("tanggal");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 jadwalsList.clear();
-                progressDialog.dismiss();
-                for (DataSnapshot ds : snapshot.getChildren()) {
+                shimmerFrameLayoutJadwal.stopShimmer();
+                shimmerFrameLayoutJadwal.setVisibility(View.GONE);
+                if(snapshot.exists()){
+                    rv_jadwal.setVisibility(View.VISIBLE);
                     tv_tidak.setVisibility(View.GONE);
-                    if (snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()){
                         Jadwals jadwals = ds.getValue(Jadwals.class);
                         jadwals.setId(ds.getKey());
                         jadwalsList.add(jadwals);
-                    }else{
-                        tv_tidak.setVisibility(View.VISIBLE);
+                        jadwalAdapter.notifyDataSetChanged();
                     }
-                    jadwalAdapter.notifyDataSetChanged();
+                }else{
+                    rv_jadwal.setVisibility(View.GONE);
+                    tv_tidak.setVisibility(View.VISIBLE);
                 }
             }
 

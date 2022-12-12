@@ -3,10 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/clMessage"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="5dp"
-    android:background="@color/chat_background">
+    style="@style/Group_message">
 
     <TextView
         android:id="@+id/tv_chat_time"
@@ -16,22 +13,14 @@
         android:paddingTop="4dp"
         android:paddingEnd="8dp"
         android:paddingBottom="4dp"
-        android:text="June 10"
+        android:text="10 Jun 2021"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_llSent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="12dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="5dp"
-        app:cardElevation="2dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true"
+        style="@style/message_bubble"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_chat_time">
 
@@ -87,15 +76,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_llReceived"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="1dp"
-        app:cardPreventCornerOverlap="false"
-        app:cardUseCompatPadding="true"
+        style="@style/message_bubble"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_llSent">
 

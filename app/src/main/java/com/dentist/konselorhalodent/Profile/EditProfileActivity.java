@@ -3,11 +3,13 @@ package com.dentist.konselorhalodent.Profile;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -31,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -52,8 +55,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private TextInputEditText etNama ,etNim ,etNomor;
-    private AutoCompleteTextView etJenisKel;
+    private TextInputLayout tilNama,tilNim,tilNomor,tilJenisKel;
+    private TextInputEditText etNama ,etNim ,etNomor,etJenisKel;
     private Button btn_simpan;
     private CircleImageView ivProfile;
     private ProgressDialog progress;
@@ -75,18 +78,23 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         setActionBar();
 
         //inisialisasi view
+        tilNama = findViewById(R.id.til_nama_profile);
+        tilJenisKel = findViewById(R.id.til_jenis_kelamin);
+        tilNim = findViewById(R.id.til_nim_profile);
+        tilNomor = findViewById(R.id.til_nomor_ponsel);
         etNama = findViewById(R.id.et_nama_profile);
-        etJenisKel = findViewById(R.id.et_jenis_profile);
+        etJenisKel = findViewById(R.id.et_jenis_kelamin);
         etNim = findViewById(R.id.et_nim_profile);
         etNomor = findViewById(R.id.et_nomor_profile);
+        ivProfile =findViewById(R.id.iv_profile_profile);
         btn_simpan = findViewById(R.id.btn_simpan);
-        ivProfile =findViewById(R.id.iv_profile_profile);;
 
         bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_photo);
 
         progress= new ProgressDialog(this);
-        progress.setMessage("Silahkan Tunggu..");
+        progress.setMessage("Loading..");
+        progress.setCanceledOnTouchOutside(false);
         progress.show();
 
         //inisialisasi database
@@ -95,11 +103,9 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(Konselors.class.getSimpleName());
         fileStorage = FirebaseStorage.getInstance().getReference();
 
-        //set dropdown menu using array and adapter
-        setDropDownMenu();
-
         btn_simpan.setOnClickListener(this);
         ivProfile.setOnClickListener(this);
+        etJenisKel.setOnClickListener(this);
 
         //jika current user tidak kosong maka akan set data ke dalam input text
         if(currentUser!=null) {
@@ -121,26 +127,16 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    private String setAngkatan(String nim){
-        if(nim.equals("18")){
-            angkatan = "2018";
-        }
-        else if(nim.equals("19")){
-            angkatan = "2019";
-        }else if(nim.equals("20")){
-            angkatan = "2020";
-        }
-        return angkatan;
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_simpan:
-                if(localFileUri!=null){
-                    updateUserProfilePhoto();
-                }else{
-                    updateUserProfile();
+                if(inputValidated()) {
+                    if (localFileUri != null) {
+                        updateUserProfilePhoto();
+                    } else {
+                        updateUserProfile();
+                    }
                 }
                 break;
             case R.id.iv_profile_profile:
@@ -151,6 +147,9 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.choose:
                 chooseGallery();
+                break;
+            case R.id.et_jenis_kelamin:
+                setDropDownMenu();
                 break;
             default:
                 break;
@@ -227,26 +226,25 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-    private void setDropDownMenu(){
-        //set dropdown menu using array and adapter
-        List<String> gender = new ArrayList<String>();
-        gender.add("Perempuan");
-        gender.add("Laki-Laki");
-        jenisAdapter = new ArrayAdapter<>(getApplicationContext(),R.layout.dropdown_menu,gender);
-        etJenisKel.setAdapter(jenisAdapter);
-    }
-
     private void getDataKonselor(){
         databaseReferenceKonselor.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     progress.dismiss();
-                    Konselors konselors = snapshot.getValue(Konselors.class);
-                    etNama.setText(konselors.getNama());
-                    etJenisKel.setText(konselors.getKelamin());
-                    etNim.setText(konselors.getNim());
-                    etNomor.setText(konselors.getPonsel());
+                    try{
+                        Konselors konselors = snapshot.getValue(Konselors.class);
+                        etNama.setText(konselors.getNama());
+                        etJenisKel.setText(konselors.getKelamin());
+                        etNim.setText(konselors.getNim());
+                        etNomor.setText(konselors.getPonsel());
+                    }catch (Exception e){
+                        etNama.setText(" ");
+                        etJenisKel.setText(" ");
+                        etNim.setText(" ");
+                        etNomor.setText(" ");
+                    }
+
                 }else{
                     Toast.makeText(EditProfileActivity.this,"Data tidak ada",Toast.LENGTH_SHORT).show();
                 }
@@ -291,7 +289,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                         photo = link;
                                         ponsel = etNomor.getText().toString();
                                         status = "Online";
-                                        role ="Konselor";
+                                        role = "Konselor";
                                         nim = etNim.getText().toString();
                                         String setNim = etNim.getText().toString().length()>8?etNim.getText().toString().substring(0,2):etNim.getText().toString();
                                         angkatan = setAngkatan(setNim);
@@ -391,6 +389,45 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 }
             }
         });
+    }
+
+    private boolean inputValidated(){
+        boolean res = true;
+        if (etNama.getText().toString().isEmpty()){
+            res = false;
+            tilNama.setError("Error : Nama Kosong");
+        }else if (etJenisKel.getText().toString().isEmpty() ){
+            res = false;
+            tilJenisKel.setError("Error : Jenis Kelamin Kosong");
+        }else if(etNim.getText().toString().isEmpty()){
+            res = false;
+            tilNim.setError("Error : Nim Kosong");
+        }else if(etNomor.getText().toString().isEmpty()){
+            res = false;
+            tilNomor.setError("Error : Nomor Kosong");
+        }
+        return res;
+    }
+
+    private String setAngkatan(String nim){
+        if(nim!=null){
+            angkatan = "20"+nim;
+        }else{
+            angkatan = "Kosong";
+        }
+        return angkatan;
+    }
+
+    private void setDropDownMenu(){
+        String[] gender = getResources().getStringArray(R.array.genders);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(gender, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                etJenisKel.setText(gender[which]);
+            }
+        });
+        builder.show();
     }
 
     //set action bar

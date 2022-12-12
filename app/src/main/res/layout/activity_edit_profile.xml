@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_profile_profile" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_nama"
+        android:id="@+id/til_nama_profile"
         style="@style/TextInputLayout.clear"
         android:layout_marginTop="15dp"
         app:startIconDrawable="@drawable/ic_person"
@@ -45,24 +45,25 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_jenis_kelamin"
-        style="@style/TextInputLayout.dropDown"
+        style="@style/TextInputLayout.clear"
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_nama"
+        app:layout_constraintTop_toBottomOf="@+id/til_nama_profile"
         app:startIconDrawable="@drawable/ic_sex">
 
-        <AutoCompleteTextView
-            android:id="@+id/et_jenis_profile"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_jenis_kelamin"
             style="@style/TextInputEditText.inputText"
-            android:padding="16dp"
-            android:textSize="16sp"
-            android:hint="@string/jenis_kelamin" />
+            android:clickable="true"
+            android:focusable="false"
+            android:cursorVisible="false"
+            android:hint="@string/jenis_kelamin"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_nim"
+        android:id="@+id/til_nim_profile"
         style="@style/TextInputLayout.clear"
         android:layout_marginTop="5dp"
         app:endIconMode="clear_text"
@@ -82,7 +83,7 @@
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_nim"
+        app:layout_constraintTop_toBottomOf="@+id/til_nim_profile"
         app:prefixText="+62"
         app:startIconDrawable="@drawable/ic_phone">
 

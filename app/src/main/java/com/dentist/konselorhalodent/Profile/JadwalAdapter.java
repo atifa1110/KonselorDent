@@ -1,12 +1,14 @@
 package com.dentist.konselorhalodent.Profile;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,24 +56,27 @@ public class JadwalAdapter extends RecyclerView.Adapter<JadwalAdapter.JadwalView
 
         try {
             date = sdf.parse(jadwal.getTanggal());
+
+            DateFormat formatter = new SimpleDateFormat("EEE, d MMMM yyyy");
+            String newFormat = formatter.format(date);
+
+            holder.jadwalTanggal.setText(newFormat);
+
+            setDokterName(jadwal,holder);
+            holder.jadwalJam.setText(jadwal.getMulai()+" - "+ jadwal.getSelesai());
+
         } catch (ParseException e) {
             e.printStackTrace();
+            Log.d("Jadwal Adapter",e.toString());
+            Toast.makeText(context,"Data Kosong",Toast.LENGTH_SHORT).show();
         }
 
-        DateFormat formatter = new SimpleDateFormat("EEE, d MMMM yyyy");
-        String newFormat = formatter.format(date);
-
-        holder.jadwalTanggal.setText(newFormat);
-
-        setDokterName(jadwal,holder);
-        holder.jadwalJam.setText(jadwal.getMulai()+" - "+ jadwal.getSelesai());
 
         holder.btn_option.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //creating a popup menu
                 PopupMenu popup = new PopupMenu(context, holder.btn_option);
-                //inflating menu from xml resource
                 popup.inflate(R.menu.menu_jadwal);
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
@@ -91,14 +96,14 @@ public class JadwalAdapter extends RecyclerView.Adapter<JadwalAdapter.JadwalView
 
 
     private void hapusJadwal(Jadwals jadwals){
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(Jadwals.class.getSimpleName()).child(jadwals.getKonselor_id());
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(NodeNames.JADWAL).child(jadwals.getKonselorId());
         ref.child(jadwals.getId()).removeValue();
     }
 
     private void setDokterName(Jadwals jadwals, JadwalViewHolder holder){
         //get sender info from uid model
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(Dokters.class.getSimpleName());
-        ref.child(jadwals.getDokter_id()).addValueEventListener(new ValueEventListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(NodeNames.DOKTERS);
+        ref.child(jadwals.getDokterId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
