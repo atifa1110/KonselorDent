@@ -89,7 +89,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     private List<Messages> messageList;
     private MessageAdapter messageAdapter;
 
-    private DatabaseReference mRootRef;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private String groupId,groupName,groupPhoto;
@@ -158,7 +157,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         //inisialisasi firebase
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        mRootRef = FirebaseDatabase.getInstance().getReference();
 
         //inisialisasi
         rv_message = findViewById(R.id.rvMessages);
@@ -414,14 +412,14 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         //timestamp
         String timestamp = ""+System.currentTimeMillis();
 
-        Messages messages = new Messages(message,currentUser.getUid(),timestamp,msgType);
+        Messages messages = new Messages(message,currentUser.getUid(),System.currentTimeMillis(),msgType);
 
         //add to db
         databaseReferenceGroups.child(groupId).child(NodeNames.MESSAGES).child(timestamp).setValue(messages).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 //message sent
-                databaseReferenceGroups.child(groupId).child(NodeNames.TIME_STAMP).setValue(timestamp);
+                databaseReferenceGroups.child(groupId).child(NodeNames.TIME_STAMP).setValue(System.currentTimeMillis());
                 etMessage.setText("");
 
                 if(msgType.equals(Constant.MESSAGE_TYPE_TEXT)){
@@ -511,6 +509,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
 
                     if(groups.getStatus().equals("selesai")){
                         llSnackbar.setVisibility(View.VISIBLE);
+
                         etMessage.setEnabled(false);
                     }
                 }
@@ -533,6 +532,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                         databaseReferenceGroups.child(groupId).child("status").setValue("Berlangsung");
                         llSnackbar.setVisibility(View.GONE);
                         etMessage.setEnabled(true);
+                        ivAttachment.setEnabled(true);
                     }
                 }).setNegativeButton("Keluar", new DialogInterface.OnClickListener() {
             @Override
@@ -554,6 +554,7 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                         databaseReferenceGroups.child(groupId).child("status").setValue("selesai");
                         llSnackbar.setVisibility(View.VISIBLE);
                         etMessage.setEnabled(false);
+                        ivAttachment.setEnabled(false);
                     }
                 }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
             @Override

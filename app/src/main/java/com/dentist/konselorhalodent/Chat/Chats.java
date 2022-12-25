@@ -1,22 +1,16 @@
 package com.dentist.konselorhalodent.Chat;
 
-public class Chats {
+public class Chats implements Comparable<Chats>{
 
-    private String id,name,photo,lastMessage,lastMessageTime;
+    private String id,name,photo,lastMessage;
+    private Long lastMessageTime;
+    private int unreadCount;
 
     public Chats() {
     }
 
-    public Chats(String id,String lastMessageTime) {
+    public Chats(String id,Long lastMessageTime) {
         this.id = id;
-        this.lastMessageTime = lastMessageTime;
-    }
-
-    public Chats(String id,String name,String photo,String lastMessage,String lastMessageTime) {
-        this.id = id;
-        this.name = name;
-        this.photo = photo;
-        this.lastMessage = lastMessage;
         this.lastMessageTime = lastMessageTime;
     }
 
@@ -52,11 +46,31 @@ public class Chats {
         this.lastMessage = lastMessage;
     }
 
-    public String getLastMessageTime() {
+    public Long getLastMessageTime() {
         return lastMessageTime;
     }
 
-    public void setLastMessageTime(String lastMessageTime) {
+    public void setLastMessageTime(Long lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
+    }
+
+    public int getUnreadCount() {
+        return unreadCount;
+    }
+
+    public void setUnreadCount(int unreadCount) {
+        this.unreadCount = unreadCount;
+    }
+
+    @Override
+    public int compareTo(Chats chat) {
+        if (lastMessageTime == chat.getLastMessageTime()) {
+            return 0;
+        }else if(lastMessageTime > chat.getLastMessageTime()){
+            return 1;
+        }else{
+            return -1;
+        }
+
     }
 }

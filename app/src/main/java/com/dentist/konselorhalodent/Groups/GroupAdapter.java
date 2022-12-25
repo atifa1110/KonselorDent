@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dentist.konselorhalodent.Model.Dokters;
+import com.dentist.konselorhalodent.Model.Messages;
+import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.Model.Pasiens;
 import com.dentist.konselorhalodent.R;
 import com.dentist.konselorhalodent.Utils.Extras;
@@ -36,6 +38,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     private Context context;
     private List<Groups> groupList;
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
     public GroupAdapter(Context context, List<Groups> groupList) {
         this.context = context;
@@ -54,24 +57,49 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     public void onBindViewHolder(@NonNull @NotNull GroupAdapter.GroupViewHolder holder, int position) {
         Groups groups = groupList.get(position);
 
-        try{
-            if(groups.getStatus().equals("selesai")){
+        try {
+            if (groups.getStatus().equals("selesai")) {
                 holder.divider.setVisibility(View.VISIBLE);
                 holder.groupSelesai.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 holder.divider.setVisibility(View.GONE);
                 holder.groupSelesai.setVisibility(View.GONE);
             }
 
-            holder.groupName.setText(groups.groupTitle);
-            loadLastMessage(groups,holder);
+            holder.groupName.setText(groups.getGroupTitle());
+
+            String message = "";
+            message = groups.getLastMessage().length() > 30 ? groups.getLastMessage().substring(0, 30) : groups.getLastMessage();
+
+            //check message if empty and message type whether text or image
+            if (message.isEmpty()) {
+                holder.groupLastMessage.setText("");
+            } else if (message.startsWith("https://firebasestorage")) {
+                holder.groupLastMessage.setText("Foto");
+            } else {
+                holder.groupLastMessage.setText(message);
+            }
+
+            if (groups.getLastMessageTime() == null) {
+                holder.groupLastMessageTime.setText("");
+            }else{
+                holder.groupLastMessageTime.setText(Util.getTimeAgo(groups.getLastMessageTime()));
+            }
+
+            if(groups.getMessageFrom().isEmpty()){
+                holder.groupSender.setText("");
+            }else if (groups.getMessageFrom().equals(currentUser.getUid())) {
+                holder.groupSender.setText("Anda : ");
+            } else {
+                setSenderName(groups.getMessageFrom(), holder);
+            }
 
             Glide.with(context).load(R.drawable.ic_group).
                     fitCenter().error(R.drawable.ic_group)
                     .into(holder.groupPhoto);
+
         }catch (Exception e){
-            holder.groupPhoto.setImageResource(R.drawable.ic_group);
-            holder.groupName.setText(" ");
+            e.printStackTrace();
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -86,52 +114,54 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         });
     }
 
-    private void loadLastMessage(Groups groups, GroupViewHolder holder){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        //get last message from group
-        DatabaseReference message = FirebaseDatabase.getInstance().getReference().child("Groups");
-        message.child(groups.groupId).child("Messages").limitToLast(1).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
-                for (DataSnapshot ds :snapshot.getChildren()){
-                    String message = ds.child("message").getValue().toString();
-                    String messageFrom = ds.child("messageFrom").getValue().toString();
-                    String messageTime = ds.child("messageTime").getValue().toString();
-                    String messageType = ds.child("messageType").getValue().toString();
-
-                    SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                    String dateTime = sfd.format(new Date(Long.parseLong(messageTime)));
-                    String [] splitString = dateTime.split(" ");
-                    String lastMessageTime = splitString[1];
-
-                    //set length message max 30 character
-                    message = message.length()>30?message.substring(0,30):message;
-
-                    //check message if empty and message type whether text or image
-                    if(message.isEmpty()){
-                        holder.groupLastMessage.setText("");
-                    }else if(messageType.equals("text")){
-                        holder.groupLastMessage.setText(message);
-                    }else if(messageType.equals("image")){
-                        holder.groupLastMessage.setText("Photo");
-                    }
-
-                    holder.groupLastMessageTime.setText(Util.getTimeAgo(Long.parseLong(messageTime)));
-
-                    if(messageFrom.equals(currentUser.getUid())){
-                        holder.groupSender.setText("You : ");
-                    }else{
-                        setSenderName(messageFrom,holder);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError error) {
-                Toast.makeText(context,"Data tidak ada",Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+    //    private void loadLastMessage(Groups groups, GroupViewHolder holder){
+//        //get last message from group
+//        DatabaseReference message = FirebaseDatabase.getInstance().getReference().child(NodeNames.GROUPS);
+//        message.child(groups.getGroupId()).child(NodeNames.MESSAGES).limitToLast(1).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+//                for (DataSnapshot ds :snapshot.getChildren()){
+//                    Messages messages = ds.getValue(Messages.class);
+//                    try {
+//                        //set length message max 30 character
+//                        String message = "";
+//                        message = messages.getMessage().length() > 30 ? messages.getMessage().substring(0, 30) : messages.getMessage();
+//
+//                        //check message if empty and message type whether text or image
+//                        if (message.isEmpty()) {
+//                            holder.groupLastMessage.setText("");
+//                        } else if (messages.getMessageType().equals("text")) {
+//                            holder.groupLastMessage.setText(message);
+//                        } else if (messages.getMessageType().equals("image")) {
+//                            holder.groupLastMessage.setText("Foto");
+//                        }
+//
+//                        if (messages.getMessageTime() == null) {
+//                            holder.groupLastMessageTime.setText("");
+//                        }else{
+//                            holder.groupLastMessageTime.setText(Util.getTimeAgo(messages.getMessageTime()));
+//                        }
+//
+//                        if(messages.getMessageFrom().isEmpty()){
+//                            holder.groupSender.setText("");
+//                        }else if (messages.getMessageFrom().equals(currentUser.getUid())) {
+//                            holder.groupSender.setText("Anda : ");
+//                        } else {
+//                            setSenderName(groups.getMessageFrom(), holder);
+//                        }
+//
+//                    }catch (Exception e){
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+//                Toast.makeText(context,R.string.tidak_ada,Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     private void setSenderName(String messageFrom,GroupViewHolder holder){
         //get sender info from uid model
@@ -141,7 +171,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     Pasiens pasiens = snapshot.getValue(Pasiens.class);
-                    holder.groupSender.setText(pasiens.getNama()+": ");
+                    holder.groupSender.setText(pasiens.getNama()+" : ");
                 }else{
                     setDokterName(messageFrom,holder);
                 }
@@ -149,7 +179,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
+                Toast.makeText(context,R.string.tidak_ada,Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -168,10 +198,11 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
             @Override
             public void onCancelled(@NonNull @NotNull DatabaseError error) {
-
+                Toast.makeText(context,R.string.tidak_ada,Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return groupList.size();

@@ -460,9 +460,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private void sendMessage(String msg, String msgType, String pushId) {
         try {
             if (!msg.equals("")) {
-                String timestamp = ""+System.currentTimeMillis();
-
-                Messages messages = new Messages(msg,currentUser.getUid(),timestamp,msgType);
+                Messages messages = new Messages(msg,currentUser.getUid(),System.currentTimeMillis(),msgType);
 
                 String currentUserRef = NodeNames.MESSAGES + "/" + currentUser.getUid() + "/" + chatUserId;
                 String chatUserRef = NodeNames.MESSAGES + "/" + chatUserId + "/" + currentUser.getUid();
@@ -479,7 +477,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         if (error != null) {
                             Toast.makeText(ChatActivity.this, getString(R.string.failed_to_send_message, error.getMessage()), Toast.LENGTH_SHORT).show();
                         } else {
-
                             String message="";
                             String image="";
                             String title = currentUser.getDisplayName();
@@ -492,8 +489,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 image = msg;
                             }
 
-                            Util.updateChatDetails(ChatActivity.this,currentUser.getUid(),chatUserId,message,timestamp);
                             Util.sendNotificationChat(ChatActivity.this,title,message,image,currentUser.getUid(),chatUserId);
+                            Util.updateChatDetails(ChatActivity.this,currentUser.getUid(),chatUserId,message,System.currentTimeMillis());
                         }
                     }
                 });

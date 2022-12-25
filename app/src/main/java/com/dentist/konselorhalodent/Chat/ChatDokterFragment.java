@@ -8,12 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.dentist.konselorhalodent.Model.Dokters;
+import com.dentist.konselorhalodent.Model.Messages;
 import com.dentist.konselorhalodent.R;
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -29,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -39,7 +42,7 @@ public class ChatDokterFragment extends Fragment {
     private ChatAdapter chatAdapter;
     private View emptyChat;
 
-    private DatabaseReference databaseReferenceDokters, databaseReferenceChats;
+    private DatabaseReference databaseReferenceDokters, databaseReferenceChats, databaseReferenceMessages;
     private FirebaseUser currentUser;
 
     private Query query;
@@ -80,6 +83,7 @@ public class ChatDokterFragment extends Fragment {
         //inisialisasi database
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReferenceDokters = FirebaseDatabase.getInstance().getReference().child(NodeNames.DOKTERS);
+        databaseReferenceMessages = FirebaseDatabase.getInstance().getReference().child(NodeNames.MESSAGES);
         databaseReferenceChats = FirebaseDatabase.getInstance().getReference().child(NodeNames.CHATS).child(currentUser.getUid());
 
         emptyChat.setVisibility(View.VISIBLE);
@@ -107,8 +111,16 @@ public class ChatDokterFragment extends Fragment {
                         rvChat.setVisibility(View.VISIBLE);
                         emptyChat.setVisibility(View.GONE);
                         Chats chats = ds.getValue(Chats.class);
+                        loadDokters(chats);
                         chatList.add(chats);
-                        loadDokters(chats.getId());
+                    }
+
+                    if(chatList.size()>1){
+                        try {
+                            Collections.sort(chatList);
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
                     }
                 }else{
                     rvChat.setVisibility(View.GONE);
@@ -118,52 +130,45 @@ public class ChatDokterFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(getContext(),R.string.tidak_ada,Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void loadDokters(String id) {
-        databaseReferenceDokters.child(id).addValueEventListener(new ValueEventListener() {
+    private void loadDokters(Chats chats) {
+        databaseReferenceDokters.child(chats.getId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String nama = "default";
-                String photo = "default";
                 if(snapshot.exists()){
                     Dokters dokters = snapshot.getValue(Dokters.class);
-                    nama = dokters.getNama();
-                    photo = dokters.getPhoto();
+                    chats.setName(dokters.getNama());
+                    chats.setPhoto(dokters.getPhoto());
+                    loadLastMessage(chats);
                 }
-                chatAdapter.setChatUserName(id,nama);
-                chatAdapter.setChatPhotoName(id,photo);
-                loadLastMessage(id);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(getContext(),R.string.tidak_ada,Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void loadLastMessage(String id){
-        DatabaseReference message = FirebaseDatabase.getInstance().getReference().child(NodeNames.MESSAGES);
-        message.child(currentUser.getUid()).child(id).limitToLast(1).addValueEventListener(new ValueEventListener() {
+    private void loadLastMessage(Chats chats){
+        databaseReferenceMessages.child(currentUser.getUid()).child(chats.getId()).limitToLast(1).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull @com.google.firebase.database.annotations.NotNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 for (DataSnapshot ds :snapshot.getChildren()){
-                    String message = ds.child("message").getValue().toString();
-                    String messageTime = ds.child("messageTime").getValue().toString();
-
-                    chatAdapter.setChatLastMessage(id,message);
-                    chatAdapter.setChatLastMessageTime(id,messageTime);
+                    Messages messages = ds.getValue(Messages.class);
+                    chats.setLastMessage(messages.getMessage());
+                    chats.setLastMessageTime(messages.getMessageTime());
                     chatAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull @com.google.firebase.database.annotations.NotNull DatabaseError error) {
-                Toast.makeText(getContext(),"Data tidak ada",Toast.LENGTH_SHORT).show();
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Toast.makeText(getContext(),R.string.tidak_ada,Toast.LENGTH_SHORT).show();
             }
         });
     }

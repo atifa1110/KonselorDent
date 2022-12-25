@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.dentist.konselorhalodent.Model.Messages;
 import com.dentist.konselorhalodent.R;
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -24,9 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
 import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +79,12 @@ public class GroupFragment extends Fragment {
         loadGroupChat();
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadGroupChat();
+    }
+
     private void loadGroupChat(){
         emptyChat.setVisibility(View.GONE);
         shimmerFrameLayoutGroup.startShimmer();
@@ -92,15 +98,17 @@ public class GroupFragment extends Fragment {
                 shimmerFrameLayoutGroup.setVisibility(View.GONE);
                 if(snapshot.exists()) {
                     for (DataSnapshot ds : snapshot.getChildren()) {
-                        Groups groups = ds.getValue(Groups.class);
-                        if (!ds.child(NodeNames.PARTICIPANTS).child(currentUser.getUid()).exists()) {
-                            rvChat.setVisibility(View.GONE);
-                            emptyChat.setVisibility(View.VISIBLE);
-                        } else {
+                        if (ds.child(NodeNames.PARTICIPANTS).child(currentUser.getUid()).child(NodeNames.ID).exists()) {
                             rvChat.setVisibility(View.VISIBLE);
                             emptyChat.setVisibility(View.GONE);
+                            Groups groups = ds.getValue(Groups.class);
+                            loadLastMessage(groups);
                             groupList.add(groups);
-                            groupAdapter.notifyDataSetChanged();
+                        }
+
+                        if(groupList.isEmpty()){
+                            rvChat.setVisibility(View.GONE);
+                            emptyChat.setVisibility(View.VISIBLE);
                         }
                     }
                 }else{
@@ -111,11 +119,41 @@ public class GroupFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(getContext(),R.string.tidak_ada,Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void loadLastMessage(Groups groups){
+        //get last message from group
+        databaseReferenceGroups.child(groups.getGroupId()).child(NodeNames.MESSAGES).limitToLast(1).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    for (DataSnapshot ds : snapshot.getChildren()) {
+                        try {
+                            Messages messages = ds.getValue(Messages.class);
+                            groups.setLastMessage(messages.getMessage());
+                            groups.setLastMessageTime(messages.getMessageTime());
+                            groups.setMessageFrom(messages.getMessageFrom());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }else{
+                    groups.setLastMessage("");
+                    groups.setLastMessageTime(null);
+                    groups.setMessageFrom("");
+                }
+                groupAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Toast.makeText(getContext(),R.string.tidak_ada,Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

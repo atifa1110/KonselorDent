@@ -32,19 +32,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
     private Context context;
     private List<Chats> chatlist;
-    private HashMap<String,String> chatUser;
-    private HashMap<String,String> chatPhoto;
-    private HashMap<String,String> chatLastMessage;
-    private HashMap<String,String> chatLastMessageTime;
-    private FirebaseUser currentUser;
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();;
 
     public ChatAdapter(Context context, List<Chats> chatlist) {
         this.context = context;
         this.chatlist = chatlist;
-        this.chatUser = new HashMap<>();
-        this.chatPhoto = new HashMap<>();
-        this.chatLastMessage = new HashMap<>();
-        this.chatLastMessageTime = new HashMap<>();
     }
 
     @NonNull
@@ -59,45 +51,40 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
     public void onBindViewHolder(@NonNull @NotNull ChatAdapter.ChatViewHolder holder, int position) {
         Chats chats = chatlist.get(position);
 
-        String nama = chatUser.get(chats.getId());
-        String photo = chatPhoto.get(chats.getId());
-        String message = chatLastMessage.get(chats.getId());
-        String time = chatLastMessageTime.get(chats.getId());
-
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
         try{
-            if(nama==null || nama.equals("default")) {
-                holder.userName.setText(" ");
+            if(chats.getName().isEmpty()){
+                holder.userName.setText("");
             }else{
-                holder.userName.setText(nama);
+                holder.userName.setText(chats.getName());
             }
 
-            if(photo==null || photo.equals("default")) {
+            if(chats.getPhoto().isEmpty()) {
                 holder.ivProfile.setImageResource(R.drawable.ic_user);
             }else{
                 Glide.with(context)
-                        .load(photo)
+                        .load(chats.getPhoto())
                         .placeholder(R.drawable.ic_user)
                         .error(R.drawable.ic_user)
                         .into(holder.ivProfile);
             }
 
-            String msg = message.length()>30?message.substring(0,30):message;
-            if(message==null) {
-                holder.lastMessage.setText(" ");
+            String message = "";
+            message = chats.getLastMessage().length()>30?chats.getLastMessage().substring(0,30): chats.getLastMessage();
+
+            if(message.isEmpty()) {
+                holder.lastMessage.setText("");
             }else{
-                if(msg.startsWith("https://firebasestorage")){
-                    holder.lastMessage.setText("New Image");
+                if(message.startsWith("https://firebasestorage")){
+                    holder.lastMessage.setText(R.string.foto);
                 }else {
-                    holder.lastMessage.setText(msg);
+                    holder.lastMessage.setText(message);
                 }
             }
 
-            if(time==null) {
-                holder.lastMessageTime.setText(" ");
+            if(chats.getLastMessageTime()==null) {
+                holder.lastMessageTime.setText("");
             }else{
-                holder.lastMessageTime.setText(Util.getTimeAgo(Long.parseLong(time)));
+                holder.lastMessageTime.setText(Util.getTimeAgo(chats.getLastMessageTime()));
             }
 
         }catch (Exception e){
@@ -112,8 +99,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
             public void onClick(View v) {
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra(Extras.USER_KEY, chats.getId());
-                intent.putExtra(Extras.USER_NAME, nama);
-                intent.putExtra(Extras.USER_PHOTO, photo);
+                intent.putExtra(Extras.USER_NAME, chats.getName());
+                intent.putExtra(Extras.USER_PHOTO, chats.getPhoto());
                 context.startActivity(intent);
             }
         });
@@ -155,23 +142,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder
 
         chats.child(id).removeValue();
         messages.child(id).removeValue();
-    }
-
-
-    public void setChatUserName(String id,String nama){
-        chatUser.put(id,nama);
-    }
-
-    public void setChatPhotoName(String id,String photo){
-        chatPhoto.put(id,photo);
-    }
-
-    public void setChatLastMessage(String id,String message){
-        chatLastMessage.put(id,message);
-    }
-
-    public void setChatLastMessageTime(String id,String time){
-        chatLastMessageTime.put(id,time);
     }
 
     public class ChatViewHolder extends RecyclerView.ViewHolder{

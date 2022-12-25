@@ -71,9 +71,9 @@ public class GroupInfoActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 Groups groups = snapshot.getValue(Groups.class);
-                tv_group_name.setText(groups.groupTitle);
+                tv_group_name.setText(groups.getGroupTitle());
 
-                databaseReferenceGroup.child(groupId).child("Participants").addValueEventListener(new ValueEventListener() {
+                databaseReferenceGroup.child(groupId).child(NodeNames.PARTICIPANTS).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull @NotNull DataSnapshot dataSnapshot) {
                         partisipantList.clear();
@@ -83,8 +83,8 @@ public class GroupInfoActivity extends AppCompatActivity {
                             String role = ds.child(NodeNames.ROLE).getValue().toString();
                             Users user = new Users(userId,timestamp,role);
                             partisipantList.add(user);
+                            participantAdapter.notifyDataSetChanged();
                         }
-                        participantAdapter.notifyDataSetChanged();
                         //set tv partisipan sebanyak partisipan list
                         tv_partisipan.setText(participantAdapter.getItemCount()+" members");
                     }

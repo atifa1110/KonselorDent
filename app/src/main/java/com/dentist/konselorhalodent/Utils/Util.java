@@ -61,7 +61,7 @@ public class Util {
         }
     }
 
-    public static void updateChatDetails(Context context, String currentUserId, String chatUserId,String message,String time){
+    public static void updateChatDetails(Context context, String currentUserId, String chatUserId,String message,Long time){
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference chatRef1 = rootRef.child(NodeNames.CHATS).child(chatUserId).child(currentUserId);
         DatabaseReference chatRef2 = rootRef.child(NodeNames.CHATS).child(currentUserId).child(chatUserId);
@@ -205,17 +205,17 @@ public class Util {
         }
     }
 
-    public static String getDay(String time){
+    public static String getDay(long time){
         SimpleDateFormat sfd = new SimpleDateFormat("dd MMM yyy HH:mm");
-        String dateTime = sfd.format(new Date(Long.parseLong(time)));
+        String dateTime = sfd.format(new Date(time));
         String [] splitString = dateTime.split(" ");
         String day = splitString[0]+" "+splitString[1]+" "+splitString[2];
         return day;
     }
 
-    public static String getTime(String time){
+    public static String getTime(long time){
         SimpleDateFormat sfd = new SimpleDateFormat("dd MMM yyy HH:mm");
-        String dateTime = sfd.format(new Date(Long.parseLong(time)));
+        String dateTime = sfd.format(new Date(time));
         String [] splitString = dateTime.split(" ");
         String waktu = splitString[3];
         return waktu ;

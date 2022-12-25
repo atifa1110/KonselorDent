@@ -18,9 +18,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -48,27 +45,25 @@ import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditProfileActivity extends AppCompatActivity implements View.OnClickListener{
 
     private TextInputLayout tilNama,tilNim,tilNomor,tilJenisKel;
     private TextInputEditText etNama ,etNim ,etNomor,etJenisKel;
-    private Button btn_simpan;
+    private MaterialButton btnSimpan;
     private CircleImageView ivProfile;
-    private ProgressDialog progress;
-    private BottomSheetDialog bottomSheetDialog;
 
     private Konselors konselor;
-    private ArrayAdapter<String> jenisAdapter;
-    private String id,nama,email,photo,ponsel,status,role,nim,angkatan,kelamin;
+    private final String status = "Online";
+    private final String role = "Konselor";
+    private String photo,angkatan;
+
+    private ProgressDialog progress;
+    private BottomSheetDialog bottomSheetDialog;
     private Uri localFileUri, serverFileUri;
     private StorageReference fileStorage;
     private DatabaseReference databaseReferenceKonselor;
-    private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
 
     @Override
@@ -87,7 +82,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         etNim = findViewById(R.id.et_nim_profile);
         etNomor = findViewById(R.id.et_nomor_profile);
         ivProfile =findViewById(R.id.iv_profile_profile);
-        btn_simpan = findViewById(R.id.btn_simpan);
+        btnSimpan = findViewById(R.id.btn_simpan);
 
         bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_photo);
@@ -98,12 +93,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         progress.show();
 
         //inisialisasi database
-        firebaseAuth = FirebaseAuth.getInstance();
-        currentUser = firebaseAuth.getCurrentUser();
-        databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(Konselors.class.getSimpleName());
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(NodeNames.KONSELORS);
         fileStorage = FirebaseStorage.getInstance().getReference();
 
-        btn_simpan.setOnClickListener(this);
+        btnSimpan.setOnClickListener(this);
         ivProfile.setOnClickListener(this);
         etJenisKel.setOnClickListener(this);
 
@@ -113,18 +107,19 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             serverFileUri = currentUser.getPhotoUrl();
             getDataKonselor();
             if(serverFileUri!=null){
-                Glide.with(this)
-                        .load(serverFileUri)
-                        .placeholder(R.drawable.ic_user)
-                        .error(R.drawable.ic_user)
-                        .into(ivProfile);
+                try{
+                    Glide.with(this)
+                            .load(serverFileUri)
+                            .placeholder(R.drawable.ic_user)
+                            .error(R.drawable.ic_user)
+                            .into(ivProfile);
+                }catch (Exception e){
+                    ivProfile.setImageResource(R.drawable.ic_user);
+                }
             }else {
                 ivProfile.setImageResource(R.drawable.ic_user);
             }
-        }else{
-            etNama.setText("");
         }
-
     }
 
     @Override
@@ -202,8 +197,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     String userId = currentUser.getUid();
-                    databaseReferenceKonselor = FirebaseDatabase.getInstance().getReference().child(Konselors.class.getSimpleName());
-
                     databaseReferenceKonselor.child(userId).child(NodeNames.PHOTO).setValue(" ").addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull @NotNull Task<Void> task) {
@@ -215,7 +208,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                 @Override
                                 public void onSuccess(Void unused) {
                                     ivProfile.setImageResource(R.drawable.ic_user);
-                                    finish();
                                     bottomSheetDialog.dismiss();
                                 }
                             });
@@ -227,11 +219,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void getDataKonselor(){
+        progress.dismiss();
         databaseReferenceKonselor.child(currentUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    progress.dismiss();
                     try{
                         Konselors konselors = snapshot.getValue(Konselors.class);
                         etNama.setText(konselors.getNama());
@@ -260,7 +252,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     private void updateUserProfilePhoto(){
         progress.show();
         //diberi file dengan nama user id .jpg
-        String filelocal = firebaseAuth.getUid() +".jpg";
+        String filelocal = currentUser.getUid() +".jpg";
         //child dengan file images/ didalamnya ada file local name
         final StorageReference fileRef = fileStorage.child("images/"+ filelocal);
 
@@ -282,22 +274,9 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                 @Override
                                 public void onComplete(@NonNull @NotNull Task<Void> task) {
                                     if(task.isSuccessful()){
-
-                                        id = currentUser.getUid();
-                                        nama = etNama.getText().toString();
-                                        email = currentUser.getEmail();
                                         photo = link;
-                                        ponsel = etNomor.getText().toString();
-                                        status = "Online";
-                                        role = "Konselor";
-                                        nim = etNim.getText().toString();
-                                        String setNim = etNim.getText().toString().length()>8?etNim.getText().toString().substring(0,2):etNim.getText().toString();
-                                        angkatan = setAngkatan(setNim);
-                                        kelamin = etJenisKel.getText().toString();
-
-                                        Konselors konselor = new Konselors(id,nama,email,photo,ponsel,status,role,kelamin,nim,angkatan);
-
-                                        databaseReferenceKonselor.child(id).setValue(konselor).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        konselor = new Konselors(currentUser.getUid(),etNama.getText().toString(),currentUser.getEmail(),photo,etNomor.getText().toString(),status,role,etJenisKel.getText().toString(),etNim.getText().toString(),setAngkatan());
+                                        databaseReferenceKonselor.child(currentUser.getUid()).setValue(konselor).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull @NotNull Task<Void> task) {
                                                 progress.dismiss();
@@ -306,8 +285,7 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                                             }
                                         });
                                     }else{
-                                        Toast.makeText(EditProfileActivity.this,
-                                                getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(EditProfileActivity.this, getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -329,29 +307,30 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onComplete(@NonNull @NotNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    id = currentUser.getUid();
-                    nama = etNama.getText().toString();
-                    email = currentUser.getEmail();
-                    ponsel = etNomor.getText().toString();
-                    status = "Online";
-                    role ="Konselor";
-                    nim = etNim.getText().toString();
-                    String setNim = etNim.getText().toString().length()>8?etNim.getText().toString().substring(0,2):etNim.getText().toString();
-                    angkatan = setAngkatan(setNim);
-                    kelamin = etJenisKel.getText().toString();
-
                     if(currentUser.getPhotoUrl()==null){
-                        photo = " ";
+                        photo = "";
+                        konselor = new Konselors(currentUser.getUid(),etNama.getText().toString(),currentUser.getEmail(),photo,etNomor.getText().toString(),status,role,etJenisKel.getText().toString(),etNim.getText().toString(),setAngkatan());
+                        databaseReferenceKonselor.child(currentUser.getUid()).setValue(konselor).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull @NotNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    progress.dismiss();
+                                    Toast.makeText(EditProfileActivity.this, R.string.update_successful, Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }else{
+                                    Toast.makeText(EditProfileActivity.this, getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }else{
                         fileStorage.child(currentUser.getPhotoUrl().getLastPathSegment()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 Log.d("uri",uri.toString());
                                 photo = uri.toString();
+                                konselor = new Konselors(currentUser.getUid(),etNama.getText().toString(),currentUser.getEmail(),photo,etNomor.getText().toString(),status,role,etJenisKel.getText().toString(),etNim.getText().toString(),setAngkatan());
 
-                                konselor = new Konselors(id,nama,email,photo,ponsel,status,role,kelamin,nim,angkatan);
-
-                                databaseReferenceKonselor.child(id).setValue(konselor).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                databaseReferenceKonselor.child(currentUser.getUid()).setValue(konselor).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull @NotNull Task<Void> task) {
                                         if(task.isSuccessful()){
@@ -367,25 +346,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                             }
                         });
                     }
-
-                    konselor = new Konselors(id,nama,email,photo,ponsel,status,role,kelamin,nim,angkatan);
-
-                    databaseReferenceKonselor.child(id).setValue(konselor).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull @NotNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                progress.dismiss();
-                                Toast.makeText(EditProfileActivity.this, R.string.update_successful, Toast.LENGTH_SHORT).show();
-                                finish();
-                            }else{
-                                Toast.makeText(EditProfileActivity.this,
-                                        getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
                 }else{
-                    Toast.makeText(EditProfileActivity.this,
-                            getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditProfileActivity.this, getString(R.string.failed_to_update, task.getException()), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -409,11 +371,12 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         return res;
     }
 
-    private String setAngkatan(String nim){
+    private String setAngkatan(){
+        String nim = etNim.getText().toString().length()>8?etNim.getText().toString().substring(0,2):etNim.getText().toString();
         if(nim!=null){
             angkatan = "20"+nim;
         }else{
-            angkatan = "Kosong";
+            angkatan = " ";
         }
         return angkatan;
     }
