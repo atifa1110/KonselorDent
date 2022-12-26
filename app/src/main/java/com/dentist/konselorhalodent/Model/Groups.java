@@ -1,4 +1,4 @@
-package com.dentist.konselorhalodent.Groups;
+package com.dentist.konselorhalodent.Model;
 
 public class Groups {
 

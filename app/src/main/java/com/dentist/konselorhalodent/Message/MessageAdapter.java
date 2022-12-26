@@ -40,7 +40,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     private Context context;
     private List<Messages> messageList;
-    private FirebaseUser currentUser;
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();;
 
     public MessageAdapter(Context context, List<Messages> messageList) {
         this.context = context;
@@ -58,12 +58,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(@NonNull  @NotNull MessageAdapter.MessageViewHolder holder, int position) {
         Messages messages = messageList.get(position);
-
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         String fromUserId = messages.getMessageFrom();
 
         try{
-            holder.tvChatTime.setText(Util.getDay(messages.getMessageTime()));
+            if (position>0){
+                if (Util.getDay(messages.getMessageTime()).equals(Util.getDay(messageList.get(position-1).getMessageTime()))){
+                    holder.tvChatTime.setVisibility(View.GONE);
+                }else{
+                    holder.tvChatTime.setText(Util.getDay(messageList.get(position).getMessageTime()));
+                    holder.tvChatTime.setVisibility(View.VISIBLE);
+                }
+            }else{
+                holder.tvChatTime.setText(Util.getDay(messageList.get(position).getMessageTime()));
+                holder.tvChatTime.setVisibility(View.VISIBLE);
+            }
+
             //check
             if(fromUserId.equals(currentUser.getUid())){
                 if(messages.getMessageType().equals(Constant.MESSAGE_TYPE_TEXT)){

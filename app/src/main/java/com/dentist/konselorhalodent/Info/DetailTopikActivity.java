@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.dentist.konselorhalodent.Utils.Extras;
 import com.dentist.konselorhalodent.R;
+import com.dentist.konselorhalodent.Utils.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -63,15 +64,10 @@ public class DetailTopikActivity extends AppCompatActivity {
         nar = nar.replaceAll("/n/n","\n\n");
         sum = sum.replaceAll("/n", "\n");
 
-        SimpleDateFormat sfd = new SimpleDateFormat("d MMM yyy HH:mm");
-        String dateTime = sfd.format(new Date(Long.parseLong(topik.getTimestamp())));
-        String [] splitString = dateTime.split(" ");
-        String topikTime = splitString[0]+" "+splitString[1]+" "+splitString[2];
-
         tv_judul.setText(topik.getJudul());
         tv_narasi.setText(nar);
         tv_sumber.setText(sum);
-        tv_tanggal.setText(topikTime);
+        tv_tanggal.setText(Util.getDay(topik.getTimestamp()));
 
         if (topik.getTipe().equals("photo")) {
             if(topik.getPhoto().equals("")){

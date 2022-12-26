@@ -4,13 +4,12 @@ import java.io.Serializable;
 
 public class Topiks implements Serializable {
 
-    private String judul,photo,narasi,sumber,timestamp,tipe;
+    private String judul,photo,narasi,sumber,tipe;
+    private Long timestamp;
 
-    public Topiks(){
+    public Topiks(){ }
 
-    }
-
-    public Topiks(String judul, String photo, String narasi, String sumber, String timestamp, String tipe) {
+    public Topiks(String judul, String photo, String narasi, String sumber, Long timestamp, String tipe) {
         this.judul = judul;
         this.photo = photo;
         this.narasi = narasi;
@@ -18,7 +17,6 @@ public class Topiks implements Serializable {
         this.timestamp = timestamp;
         this.tipe = tipe;
     }
-
 
     public String getJudul() {
         return judul;
@@ -52,11 +50,11 @@ public class Topiks implements Serializable {
         this.sumber = sumber;
     }
 
-    public String getTimestamp() {
+    public Long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(String timestamp) {
+    public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
     }
 

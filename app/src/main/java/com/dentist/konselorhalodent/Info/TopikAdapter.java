@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.dentist.konselorhalodent.Utils.Extras;
 import com.dentist.konselorhalodent.R;
+import com.dentist.konselorhalodent.Utils.Util;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -43,17 +44,31 @@ public class TopikAdapter extends RecyclerView.Adapter<TopikAdapter.TopikViewHol
         Topiks topiks = topiksList.get(position);
 
         try{
-            holder.topikName.setText(topiks.getJudul());
+            if(topiks.getJudul().isEmpty()){
+                holder.topikName.setText("");
+            }else {
+                holder.topikName.setText(topiks.getJudul());
+            }
 
-            String narasi = topiks.getNarasi();
-            narasi = narasi.length()>100?narasi.substring(0,100):narasi;
+            String narasi = "";
+            narasi = topiks.getNarasi().length()>100?topiks.getNarasi().substring(0,100):topiks.getNarasi();
 
-            holder.topikNarasi.setText(narasi+"...");
+            if(topiks.getNarasi().isEmpty()){
+                holder.topikNarasi.setText(" ");
+            }else {
+                holder.topikNarasi.setText(narasi + "...");
+            }
+
+            if(topiks.getTimestamp()==null){
+                holder.time.setText("");
+            }else {
+                holder.time.setText(Util.getDay(topiks.getTimestamp()));
+            }
 
             Glide.with(context)
                     .load(topiks.getPhoto())
                     .placeholder(R.drawable.ic_add_photo)
-                    .centerCrop()
+                    .error(R.drawable.ic_add_photo)
                     .into(holder.photoName);
 
         }catch (Exception e){
@@ -61,13 +76,6 @@ public class TopikAdapter extends RecyclerView.Adapter<TopikAdapter.TopikViewHol
             holder.topikNarasi.setText(" ");
             holder.topikName.setText(" ");
         }
-
-        SimpleDateFormat sfd = new SimpleDateFormat("d MMM yyy HH:mm");
-        String dateTime = sfd.format(new Date(Long.parseLong(topiks.getTimestamp())));
-        String [] splitString = dateTime.split(" ");
-        String topikTime = splitString[0]+" "+splitString[1]+" "+splitString[2];
-
-        holder.time.setText(topikTime);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

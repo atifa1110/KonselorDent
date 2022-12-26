@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.dentist.konselorhalodent.Model.Chats;
 import com.dentist.konselorhalodent.Utils.Extras;
 import com.dentist.konselorhalodent.Model.NodeNames;
 import com.dentist.konselorhalodent.R;
@@ -25,7 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatViewHolder> {

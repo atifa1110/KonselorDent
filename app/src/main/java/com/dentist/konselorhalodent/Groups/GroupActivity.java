@@ -2,7 +2,6 @@ package com.dentist.konselorhalodent.Groups;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,14 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -39,6 +34,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.dentist.konselorhalodent.Message.MessageAdapter;
+import com.dentist.konselorhalodent.Model.Groups;
 import com.dentist.konselorhalodent.Model.Messages;
 import com.dentist.konselorhalodent.Utils.Constant;
 import com.dentist.konselorhalodent.Utils.Util;
@@ -506,11 +502,10 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     Groups groups = snapshot.getValue(Groups.class);
-
                     if(groups.getStatus().equals("selesai")){
                         llSnackbar.setVisibility(View.VISIBLE);
-
                         etMessage.setEnabled(false);
+                        ivAttachment.setClickable(false);
                     }
                 }
             }
@@ -554,12 +549,11 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                         databaseReferenceGroups.child(groupId).child("status").setValue("selesai");
                         llSnackbar.setVisibility(View.VISIBLE);
                         etMessage.setEnabled(false);
-                        ivAttachment.setEnabled(false);
+                        ivAttachment.setClickable(false);
                     }
                 }).setNegativeButton("tidak", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
             }
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
@@ -570,8 +564,10 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_action_bar, menu);
+        MenuItem start = menu.findItem(R.id.menu_start);
         MenuItem info = menu.findItem(R.id.menu_search);
         info.setVisible(false);
+        start.setVisible(false);
         return true;
     }
 
