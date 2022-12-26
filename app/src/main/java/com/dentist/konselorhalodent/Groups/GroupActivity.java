@@ -517,28 +517,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void sessionStart() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GroupActivity.this);
-        alertDialogBuilder.setMessage("Sesi chat ini sudah berakhir")
-                .setCancelable(false)
-                .setPositiveButton("Lanjutkan", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        databaseReferenceGroups.child(groupId).child("status").setValue("Berlangsung");
-                        llSnackbar.setVisibility(View.GONE);
-                        etMessage.setEnabled(true);
-                        ivAttachment.setEnabled(true);
-                    }
-                }).setNegativeButton("Keluar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                onBackPressed();
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
     private void sessionStop() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(GroupActivity.this);
         alertDialogBuilder.setMessage("Apakah sesi chat ingin diakhiri?")
@@ -585,9 +563,6 @@ public class GroupActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.menu_stop:
                 sessionStop();
-                break;
-            case R.id.menu_start:
-                sessionStart();
                 break;
         }
         return super.onOptionsItemSelected(item);
