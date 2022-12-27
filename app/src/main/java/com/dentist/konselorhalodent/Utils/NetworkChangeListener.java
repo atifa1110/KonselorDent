@@ -14,7 +14,7 @@ public class NetworkChangeListener extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if(!Common.isConnectedToInternet(context)){
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
-            builder.setTitle("No Internet!");
+            builder.setTitle("Tidak ada Internet!");
             builder.setMessage("Harap sambungkan ponsel anda ke internet");
             builder.setCancelable(false);
             builder.setPositiveButton("Setting", new DialogInterface.OnClickListener() {
@@ -23,7 +23,7 @@ public class NetworkChangeListener extends BroadcastReceiver {
                     context.startActivity(new Intent(android.provider.Settings.ACTION_SETTINGS));
                 }
             });
-            builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton("Coba Lagi", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
