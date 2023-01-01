@@ -37,7 +37,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     private Toolbar toolbar;
     private String email, nama, password, confirmPassword,nomor;
     private ProgressDialog progress;
-
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseReference;
 
