@@ -1,4 +1,4 @@
-# Halo Admin
+# Halo Admin (Konselor Dent)
 
 ### Overview :
 Halo Admin adalah Aplikasi Messenger berbasis Java yang menggunakan Firebase sebagai database. Halo Admin menrupakan bagian aplikasi yang dikhusukan untuk user konselor
@@ -47,11 +47,17 @@ Halo Admin adalah Aplikasi Messenger berbasis Java yang menggunakan Firebase seb
          style="width:200px;height:400px;" </td>
     <td><img src="https://user-images.githubusercontent.com/49097275/255693649-f22b1df4-db82-4a11-aed2-ec7cae6b66eb.jpg" alt="Konsul Selesai"
          style="width:200px;height:400px;"></td>
-   <td><img src="" alt="Grup Info"
+   <td><img src="https://user-images.githubusercontent.com/49097275/255694811-002d6495-3153-42f2-a998-c777b3147199.jpg" alt="Grup Info"
          style="width:200px;height:400px;"></td>
   </tr>
+
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/49097275/255694863-09ff7421-41da-4a91-9535-b49a5f704016.jpg" alt="Detail Pasien"
+         style="width:200px;height:400px;" </td>
+     <td><img src="https://user-images.githubusercontent.com/49097275/255694879-81489e88-c4c3-4873-a344-dc50fdfcf624.jpg" alt="Chat Dokter"
+         style="width:200px;height:400px;" </td>
+  </tr>
  
-   
 </table><br><br>
 
 ### Tools and Tech stack used : 
